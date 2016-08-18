@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerDeanery']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="deaneryForm">
+			<fieldset class="nonStyledFieldset">
+				<legend>#{messages['labelData']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="year">#{messages['labelStudyYear']}</h:outputLabel>
+						<h:inputText id="year" name="year" value="#{deaneryController.year}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="name">#{messages['labelName']}</h:outputLabel>
+						<h:inputText id="name" name="name" value="#{deaneryController.name}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="faculty">#{messages['labelFaculty']}</h:outputLabel>
+						<h:inputText id="faculty" name="faculty" value="#{deaneryController.faculty}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="facultyEnglish">#{messages['labelFacultyEnglish']}</h:outputLabel>
+						<h:inputText id="facultyEnglish" name="facultyEnglish" value="#{deaneryController.facultyEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="contactData">#{messages['labelContactData']}</h:outputLabel>
+						<h:inputTextarea id="contactData" name="contactData" value="#{deaneryController.contactData}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="contactEmailAddress">#{messages['labelConcactEmailAddress']}</h:outputLabel>
+						<h:inputText id="contactEmailAddress" name="contactEmailAddress" value="#{deaneryController.emailAddress}" validator="#{deaneryController.validateAddress}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="examDays">#{messages['labelExamDaysPerDate']}</h:outputLabel>
+						<h:inputText id="examDays" name="examDays" value="#{deaneryController.examDays}" class="smallInput" />
+					</li>
+				</ol>
+			</fieldset>
+			<fieldset class="nonStyledFieldset">
+				<legend>#{messages['labelFunctionaries']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="principal">#{messages['labelPrincipal']}</h:outputLabel>
+						<h:selectOneMenu id="principal" name="principal" value="#{deaneryController.principal}" class="xxLargeInput">
+							<f:selectItems value="#{deaneryController.professors}" var="professor" itemLabel="#{professor}" itemValue="#{professor.id}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="vicePrincipal">#{messages['labelVicePrincipal']}</h:outputLabel>
+						<h:selectOneMenu id="vicePrincipal" name="vicePrincipal" value="#{deaneryController.vicePrincipal}" class="xxLargeInput">
+							<f:selectItems value="#{deaneryController.professors}" var="professor" itemLabel="#{professor}" itemValue="#{professor.id}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="dean">#{messages['labelDean']}</h:outputLabel>
+						<h:selectOneMenu id="dean" name="dean" value="#{deaneryController.dean}" class="xxLargeInput">
+							<f:selectItems value="#{deaneryController.professors}" var="professor" itemLabel="#{professor}" itemValue="#{professor.id}" />
+						</h:selectOneMenu>
+					</li>
+				</ol>
+			</fieldset>
+			<h:commandButton id="save" name="save" value="#{messages['labelSave']}" action="#{deaneryController.save}" />
+		</h:form>
+	</ui:define>
+</ui:composition>

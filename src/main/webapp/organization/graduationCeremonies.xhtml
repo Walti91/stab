@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerGraduationCeremonies']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="graduationCeremoniesForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li>
+						<h:outputLabel for="graduationCeremony" rendered="#{!graduationCeremonies.newGraduationCeremony}">#{messages['labelGraduationCeremony']}</h:outputLabel>
+						<h:selectOneMenu id="graduationCeremony" name="graduationCeremony" value="#{graduationCeremonies.selectedGraduationCeremony}" class="largeInput" rendered="#{!graduationCeremonies.newGraduationCeremony}">
+							<f:selectItems value="#{graduationCeremonies.graduationCeremonies}" var="graduationCeremony" itemLabel="#{graduationCeremony}" itemValue="#{graduationCeremony.id}" />
+							<f:ajax execute="@this" render="@form :globalMessagesPanel" listener="#{graduationCeremonies.update}" />
+						</h:selectOneMenu>
+						<h:commandButton id="new" name="new" value="#{messages['labelNew']}" action="#{graduationCeremonies.add}" rendered="#{!graduationCeremonies.newGraduationCeremony}" />
+						<h:inputText id="newGraduationCeremony" name="newGraduationCeremony" value="#{messages['labelNewGraduationCeremony']}" disabled="true" class="largeInput" rendered="#{graduationCeremonies.newGraduationCeremony}" />
+					</li>
+				</ol>
+			</fieldset>
+			<fieldset class="nonStyledFieldset">
+				<legend>#{messages['labelGraduationCeremony']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="date" class="required">#{messages['labelDay']}</h:outputLabel>
+						<h:inputText id="date" name="date" value="#{graduationCeremonies.date}" class="largeInput">
+							<f:convertDateTime pattern="#{messages['dateFormat']}" />
+						</h:inputText>
+					</li>
+					<li>
+						<h:outputLabel for="time" class="required">#{messages['labelTime']}</h:outputLabel>
+						<h:inputText id="time" name="time" value="#{graduationCeremonies.time}" class="largeInput">
+							<f:convertDateTime pattern="#{messages['timeFormat']}" />
+						</h:inputText>
+					</li>
+					<li>
+						<h:outputLabel for="room" class="required">#{messages['labelRoom']}</h:outputLabel>
+						<h:selectOneMenu id="room" name="room" value="#{graduationCeremonies.room}" class="largeInput">
+							<f:selectItems value="#{graduationCeremonies.rooms}" var="room" itemLabel="#{room}" itemValue="#{room.id}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="description">#{messages['labelDescription']}</h:outputLabel>
+						<h:inputText id="description" name="description" value="#{graduationCeremonies.description}" class="largeInput" />
+					</li>
+					<li>
+						<h:commandButton id="save" name="save" value="#{messages['labelSave']}" action="#{graduationCeremonies.save}" />
+						<h:button id="cancel" name="cancel" value="#{messages['labelCancel']}" outcome="/organization/graduationCeremonies" rendered="#{graduationCeremonies.newGraduationCeremony}" />
+					</li>
+				</ol>
+			</fieldset>
+			<h:panelGroup rendered="#{!graduationCeremonies.newGraduationCeremony}">
+				<fieldset class="nonStyledFieldset">
+					<legend>#{messages['labelRegisteredStudents']}</legend>
+					<ol>
+						<c:forEach items="#{graduationCeremonies.enrollments}" var="enrollment">
+							<li>
+								<h:outputText id="enrollment#{enrollment.id}" name="enrollment#{enrollment.id}" value="#{enrollment.student}" />
+							</li>
+						</c:forEach>
+					</ol>
+				</fieldset>
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+</ui:composition>

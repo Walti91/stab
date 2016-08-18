@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerStudyPlans']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="studyPlansForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li>
+						<h:outputLabel for="studyPlan">#{messages['labelStudyPlan']}</h:outputLabel>
+						<h:selectOneMenu id="studyPlan" name="studyPlan" value="#{studyPlanController.selection}" class="xxLargeInput">
+							<f:selectItems value="#{studyPlanController.studyPlans}" var="studyPlan" itemLabel="#{studyPlan}" itemValue="#{studyPlan.number}" />
+							<f:ajax execute="@this" render="@form :globalMessagesPanel" listener="#{studyPlanController.update}" />
+						</h:selectOneMenu>
+					</li>
+				</ol>
+			</fieldset>
+			<fieldset class="nonStyledFieldset">
+				<legend>#{messages['labelLegalBasis']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="certificateGerman">#{messages['labelCertificateGerman']}</h:outputLabel>
+						<h:inputTextarea id="certificateGerman" name="certificateGerman" value="#{studyPlanController.certificateGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="certificateEnglish">#{messages['labelCertificateEnglish']}</h:outputLabel>
+						<h:inputTextarea id="certificateEnglish" name="certificateEnglish" value="#{studyPlanController.certificateEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="optionalNotesGerman">#{messages['labelOptionalNotesGerman']}</h:outputLabel>
+						<h:inputTextarea id="optionalNotesGerman" name="optionalNotesGerman" value="#{studyPlanController.optionalNotesGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="optionalNotesEnglish">#{messages['labelOptionalNotesEnglish']}</h:outputLabel>
+						<h:inputTextarea id="optionalNotesEnglish" name="optionalNotesEnglish" value="#{studyPlanController.optionalNotesEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="boardExaminationNameGerman">#{messages['labelBoardExaminationNameGerman']}</h:outputLabel>
+						<h:inputTextarea id="boardExaminationNameGerman" name="boardExaminationNameGerman" value="#{studyPlanController.boardExaminationNameGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="boardExaminationNameEnglish">#{messages['labelBoardExaminationNameEnglish']}</h:outputLabel>
+						<h:inputTextarea id="boardExaminationNameEnglish" name="boardExaminationNameEnglish" value="#{studyPlanController.boardExaminationNameEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="thesisNameGerman">#{messages['labelThesisNameGerman']}</h:outputLabel>
+						<h:inputTextarea id="thesisNameGerman" name="thesisNameGerman" value="#{studyPlanController.thesisNameGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="thesisNameEnglish">#{messages['labelThesisNameEnglish']}</h:outputLabel>
+						<h:inputTextarea id="thesisNameEnglish" name="thesisNameEnglish" value="#{studyPlanController.thesisNameEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="examinationSubjectThesisNameGerman">#{messages['labelExaminationSubjectThesisNameGerman']}</h:outputLabel>
+						<h:inputTextarea id="examinationSubjectThesisNameGerman" name="examinationSubjectThesisNameGerman" value="#{studyPlanController.examinationSubjectThesisNameGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="examinationSubjectThesisNameEnglish">#{messages['labelExaminationSubjectThesisNameEnglish']}</h:outputLabel>
+						<h:inputTextarea id="examinationSubjectThesisNameEnglish" name="examinationSubjectThesisNameEnglish" value="#{studyPlanController.examinationSubjectThesisNameEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="examinationSubjectThesisNamePostfixGerman">#{messages['labelExaminationSubjectThesisNamePostfixGerman']}</h:outputLabel>
+						<h:inputTextarea id="examinationSubjectThesisNamePostfixGerman" name="examinationSubjectThesisNamePostfixGerman" value="#{studyPlanController.examinationSubjectThesisNamePostfixGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="examinationSubjectThesisNamePostfixEnglish">#{messages['labelExaminationSubjectThesisNamePostfixEnglish']}</h:outputLabel>
+						<h:inputTextarea id="examinationSubjectThesisNamePostfixEnglish" name="examinationSubjectThesisNamePostfixEnglish" value="#{studyPlanController.examinationSubjectThesisNamePostfixEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="ectsCertificate">#{messages['labelEctsCertificate']}</h:outputLabel>
+						<h:selectBooleanCheckbox id="ectsCertificate" name="ectsCertificate" value="#{studyPlanController.ectsCertificate}" />
+						<span>nominale ECTS auf Zeugnis</span>
+					</li>
+					<li>
+						<h:outputLabel for="noticeGerman">#{messages['labelNoticeGerman']}</h:outputLabel>
+						<h:inputTextarea id="noticeGerman" name="noticeGerman" value="#{studyPlanController.noticeGerman}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="noticeEnglish">#{messages['labelNoticeEnglish']}</h:outputLabel>
+						<h:inputTextarea id="noticeEnglish" name="noticeEnglish" value="#{studyPlanController.noticeEnglish}" class="xxLargeInput" />
+					</li>
+					<li>
+						<h:commandButton id="save" name="save" value="#{messages['labelSave']}" action="#{studyPlanController.save}" />
+					</li>
+				</ol>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

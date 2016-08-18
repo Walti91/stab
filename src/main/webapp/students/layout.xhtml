@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerEditStudent']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<fieldset class="nonStyledFieldset">
+			<ol>
+				<li>
+					<h:outputLabel for="enrollment">#{messages['labelStudent']}</h:outputLabel>
+					<h:outputText id="enrollment" name="enrollment" value="#{enrollment}" />
+				</li>
+			</ol>
+		</fieldset>
+		<h:form id="navigationForm">
+			<div id="pageNav" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    			<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+           			<li id="overview" class="ui-state-default ui-corner-top #{overviewActive}">
+             			<h:link value="#{messages['linkOverview']}" outcome="/students/overview" />
+           			</li>
+           			<li id="personalData" class="ui-state-default ui-corner-top #{personalDataActive}">
+             			<h:link value="#{messages['linkPersonalData']}" outcome="/students/personalData" />
+           			</li>
+           			<li id="thesis" class="ui-state-default ui-corner-top #{thesisActive}">
+           				<h:link value="#{enrollment.study.thesisNameGerman}" outcome="/students/thesis" />
+           			</li>
+           			<li id="assignments" class="ui-state-default ui-corner-top #{assignmentsActive}">
+           				<h:link value="#{messages['linkAssignments']}" outcome="/students/assignments" />
+           			</li>
+           			<h:panelGroup rendered="#{validationController.hasCommission(enrollment.id)}">
+	           			<li id="commission" class="ui-state-default ui-corner-top #{commissionActive}">
+	           				<h:link value="#{messages['linkCommission']}" outcome="/students/commission" />
+	           			</li>
+           			</h:panelGroup>
+           			<li id="documents" class="ui-state-default ui-corner-top #{documentsActive}">
+           				<h:link value="#{messages['linkDocuments']}" outcome="/students/documents" />
+           			</li>
+           			<li id="notifications" class="ui-state-default ui-corner-top #{notificationsActive}">
+           				<h:link value="#{messages['linkNotifications']}" outcome="/students/notifications" />
+           			</li>
+    			</ul>
+			</div>
+		</h:form>
+		<ui:insert name="furtherContent" />
+	</ui:define>
+</ui:composition>

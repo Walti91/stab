@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/students/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+    <ui:param name="assignmentsActive" value="ui-tabs-selected ui-state-active" />
+	<ui:define name="furtherContent">
+		<h:form id="assignmentsForm">
+			<div id="assignmentsBlock">
+				<div id="leftBlock">
+					<h:selectOneMenu id="assignment" name="assignment" value="#{assignmentsController.selectedAssignment}" class="wide">
+						<f:selectItems value="#{assignmentsController.assignments}" var="assignment" itemLabel="#{assignment}" itemValue="#{assignment.id}" />
+						<f:ajax execute="@this" render="@form" />
+					</h:selectOneMenu>
+					<div id="ectsBlock">
+						<div class="ectsWrapper">
+							<h:outputLabel for="nominal">#{messages['labelNominal']}</h:outputLabel>
+							<h:outputText id="nominal" name="nominal" value="TODO" />
+						</div>
+						<div class="ectsWrapper">
+							<h:outputLabel for="assigned">#{messages['labelAssigned']}</h:outputLabel>
+							<h:outputText id="assigned" name="assigned" value="#{assignmentsController.assigned}" />
+						</div>
+						<div class="ectsWrapper">
+							<h:selectBooleanCheckbox id="confirmed" name="confirmed" value="#{assignmentsController.confirmed}">
+								<f:ajax execute="@this" render="assignment" />
+							</h:selectBooleanCheckbox>
+							<h:outputLabel for="confirmed">#{messages['labelConfirmed']}</h:outputLabel>
+						</div>
+					</div>
+					<c:forEach items="#{assignmentsController.moduleAssignments}" var="moduleAssignment">
+						<div class="assignmentWrapper">
+							<h:outputLabel for="moduleAssignment#{moduleAssignment.id}">#{moduleAssignment}</h:outputLabel>
+							<h:selectOneListbox id="moduleAssignment#{moduleAssignment.id}" name="moduleAssignment#{moduleAssignment.id}" value="#{assignmentsController.selectedExam}" size="2">
+								<f:selectItems value="#{moduleAssignment.exams}" var="exam" itemLabel="#{exam}" itemValue="#{exam.id}" />
+							</h:selectOneListbox>
+							<h:commandButton id="fromExamsToModule#{moduleAssignment.id}" name="fromExamsToModule#{moduleAssignment.id}" value="&lt;&lt;" action="#{assignmentsController.fromExamsToModule(moduleAssignment.id)}">
+						        <f:ajax execute="exams" render="moduleAssignment#{moduleAssignment.id} exams assigned" />
+						    </h:commandButton>
+						    <h:commandButton id="fromModule#{moduleAssignment.id}ToExams" name="fromModule#{moduleAssignment.id}ToExams" value="&gt;&gt;" action="#{assignmentsController.fromModuleToExams(moduleAssignment.id)}">
+						        <f:ajax execute="moduleAssignment#{moduleAssignment.id}" render="moduleAssignment#{moduleAssignment.id} exams assigned" />
+						    </h:commandButton>
+					    </div>
+					</c:forEach>
+				</div>
+				<div id="rightBlock">
+					<h:outputLabel for="exams">#{messages['labelUnassignedExams']}</h:outputLabel>
+		        	<h:selectOneListbox id="exams" value="#{assignmentsController.selectedExam}" size="20">
+		            	<f:selectItems value="#{assignmentsController.exams}" var="exam" itemLabel="#{exam}" itemValue="#{exam.id}" />
+		         	</h:selectOneListbox>
+		      	</div>
+			</div>
+			<div id="buttonsBlock">
+				<h:commandButton id="deleteAssignments" name="deleteAssignments" value="#{messages['labelDeleteAllAssignments']}" action="#{assignmentsController.deleteAssignments}">
+					<f:ajax execute="deleteAssignments" render="@form" />
+				</h:commandButton>
+				<h:commandButton id="defaultAssignments" name="defaultAssignments" value="#{messages['labelSetDefaultAssignments']}" action="#{assignmentsController.defaultAssignments}">
+					<f:ajax execute="defaultAssignments" render="@form" />
+				</h:commandButton>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

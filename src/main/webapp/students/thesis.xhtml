@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/students/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+    <ui:param name="thesisActive" value="ui-tabs-selected ui-state-active" />
+	<ui:define name="furtherContent">
+		<h:form id="thesisForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li>
+						<h:outputLabel for="name">#{messages['labelTitle']}</h:outputLabel>
+						<h:inputTextarea id="name" name="name" value="#{thesisController.name}" class="largeInput" />
+					</li>
+					<li>
+						<h:outputLabel for="institute">#{messages['labelInstitute']}</h:outputLabel>
+						<h:selectOneMenu id="institute" name="institute" value="#{thesisController.institute}" class="xxLargeInput">
+							<f:selectItem itemValue="#{null}" itemLabel="#{messages['unlistedInstitute']}" />
+							<f:selectItems value="#{thesisController.institutes}" var="institute" itemLabel="#{institute}" itemValue="#{institute.id}" />
+							<f:ajax execute="@this" render="adviser assistant" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="adviser">#{messages['labelAdviser']}</h:outputLabel>
+						<h:selectOneMenu id="adviser" name="adviser" value="#{thesisController.adviser}" class="xxLargeInput">
+							<f:selectItem itemValue="#{null}" itemLabel="#{messages['unlistedAdviser']}" />
+							<f:selectItems value="#{thesisController.advisers}" var="adviser" itemLabel="#{adviser}" itemValue="#{adviser.id}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="assistant">#{messages['labelAssistant']}</h:outputLabel>
+						<h:selectOneMenu id="assistant" name="assistant" value="#{thesisController.assistant}" class="xxLargeInput">
+							<f:selectItem itemValue="#{null}" itemLabel="#{messages['unlistedAssistant']}" />
+							<f:selectItems value="#{thesisController.assistants}" var="assistant" itemLabel="#{assistant}" itemValue="#{assistant.id}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="grade">#{messages['labelGrade']}</h:outputLabel>
+						<h:selectOneMenu id="grade" name="grade" value="#{thesisController.grade}" class="smallInput">
+							<f:selectItem itemValue="#{null}" itemLabel="-" />
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItem itemValue="2" itemLabel="2" />
+							<f:selectItem itemValue="3" itemLabel="3" />
+							<f:selectItem itemValue="4" itemLabel="4" />
+							<f:selectItem itemValue="5" itemLabel="5" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="date">#{messages['labelDate']}</h:outputLabel>
+						<h:inputText id="date" name="date" value="#{thesisController.date}" class="largeInput">
+							<f:convertDateTime pattern="#{messages['dateFormat']}" />
+						</h:inputText>
+					</li>
+				</ol>
+			</fieldset>
+			<h:commandButton id="save" name="save" value="#{messages['labelSave']}" action="#{thesisController.save}" />
+		</h:form>
+	</ui:define>
+</ui:composition>

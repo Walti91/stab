@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 -->
+	<!-- The default template for all pages. The code is mostly copied from TISS to rebuild the design. Except for the logout. -->
+	<h:head>
+		<title>TISS</title>
+		<link rel="shortcut icon" href="/stab/resources/static/2.5.2/global/images/icons/favicon.ico" type="image/x-icon" />
+		<link rel="apple-touch-icon" href="/stab/resources/static/2.5.2/global/images/mobile/apple-touch-icon-precomposed.png" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/basic.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/content.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/jquery.qtip.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/jquery.ui.multiSelectList.css" />
+  		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/jquery.ui.tissAccordion.css" />
+		<link id="mobileCSS" rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/mobile.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/primefaces.css" />
+		<link rel="stylesheet" media="print" type="text/css" href="/stab/resources/static/2.5.2/global/css/print.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/reset.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/statusMessage.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/widgets.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/styles.css" />
+	</h:head>
+	<h:body class="organisation de">
+		<div id="glow_left" />
+		<div id="glow_right" />
+		<div id="wrapper">
+			<div id="header">
+				<div id="headerInnerWrapper">
+					<div id="headerInner">
+						<div id="headerLeft">
+							<div id="headerLeftInside">
+								<div id="logo">
+									<h1><a /></h1>
+								</div>
+							</div>
+						</div>
+						<div id="headerCenter">
+							<div id="headerCenterInside">
+								<div id="paperHead">
+									<h:form id="toolNavForm" name="toolNavForm">
+										<ul class="clearfix toolNav">
+											<li>
+												<span id="homeIcon" class="toolHome" />
+											</li>
+											<li class="rightAlign">
+												<!-- Calls the logout method of the Authentication bean. -->
+    											<h:commandLink id="logout" action="#{authentication.logout}" value="#{messages['labelLogout']}" class="toolLogout" />
+											</li>
+										</ul>
+									</h:form>
+								</div>
+							</div>
+						</div>
+						<div id="headerRight">
+							<div id="tuLogo">
+								<a />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="contentWrapper">
+				<div id="supNav">
+					<div id="supNavHeaderWrapper">
+						<div id="supNavHeader">
+							<div id="supNavHeaderStroke" />
+							<div id="supNavHeading" />
+						</div>
+						<div id="shadow_top" />
+					</div>
+					<div id="supNavBody">
+						<h:panelGroup rendered="#{authentication.isLoggedIn()}">
+							<ul>
+								<li>
+									<ul class="linkBlock">
+										<li>
+											<h:link value="#{messages['linkBachelorStudents']}" outcome="/students/bachelorStudents" class="supNavMenuHeader" />
+										</li>
+									</ul>
+								</li>
+								<li>
+									<ul class="linkBlock">
+										<li>
+											<h:link value="#{messages['linkMasterStudents']}" outcome="/students/masterStudents" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkGraduationDates']}" outcome="/graduationDates/selection" class="supNavMenuHeader" />
+										</li>
+									</ul>
+								</li>
+								<li>
+									<ul class="linkBlock">
+										<li>
+											<h:link value="#{messages['linkGraduationCeremonies']}" outcome="/organization/graduationCeremonies" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkStudyPlans']}" outcome="/organization/studyPlans" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkCourses']}" outcome="/organization/courses" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkEmployees']}" outcome="/organization/employees" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkInstitutesAndRooms']}" outcome="/organization/institutes" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkDeanery']}" outcome="/organization/deanery" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkStatistics']}" outcome="/organization/statistics" class="supNavMenuHeader" />
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</h:panelGroup>
+					</div>
+				</div>
+				<div id="mainNav">
+					<div>
+						<a id="lehreLink">Lehre</a>
+						<a id="forschungLink">Forschung</a>
+						<a id="organisationLink">Organisation</a>
+					</div>
+				</div>
+				<div id="content">
+					<div id="contentInnerWrapper" class="clearfix">
+						<div id="contentInner">
+							<ui:insert name="header">
+								<h1>Default Header</h1>
+							</ui:insert>
+							<h:messages id="globalMessagesPanel" errorClass="errorMessage" warnClass="warnMessage" infoClass="infoMessage" />
+							<ui:insert name="content">
+								Default Content
+							</ui:insert>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footerContent">
+					<div id="footer-left" />
+					<div id="footer-right" />
+					<div id="pageEnd" />
+				</div>
+				<div id="footerShadow">
+					<div id="footerShadow-left" />
+					<div id="footerShadow-right" />
+					<div id="baseLinks">
+						<a>Support</a>
+						|
+						<a>Policies</a>
+						|
+						<a>Impressum</a>
+					</div>
+					<div id="legalInfo">
+						Technische Universität Wien - Karlsplatz 13 | 1040 Wien, Österreich | Tel. +43-1-58801-0 | Fax +43-1-58801-41088
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:body>
+</html>    				

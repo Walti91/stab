@@ -1,0 +1,78 @@
+/*
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#leftBlock {
+	float: left;
+	width: 50%;
+}
+
+#rightBlock {
+	float: right;
+	width: 50%;
+}
+
+#assignmentsBlock label {
+	width: 100%;
+	max-width: 100%;
+	display: block;
+}
+
+#leftBlock select {
+	width: 75%;
+	max-width: 75%;
+}
+
+#leftBlock .assignmentWrapper {
+	margin-bottom: 3%;
+}
+
+#leftBlock .wide {
+	width: 95%;
+	max-width: 95%;
+}
+
+#rightBlock select {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 3%;
+}
+
+#ectsBlock {
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+
+#ectsBlock .ectsWrapper {
+	display: inline-block;
+	width: 32%;
+}
+
+#ectsBlock .ectsWrapper span {
+	margin-left: 3%;
+}
+
+#ectsBlock .ectsWrapper * {
+	display: inline;
+}
+
+#buttonsBlock {
+	clear: both;
+}
+
+.dateWrapper {
+	display: block;
+}

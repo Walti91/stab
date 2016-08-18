@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/students/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+    <ui:param name="personalDataActive" value="ui-tabs-selected ui-state-active" />
+	<ui:define name="furtherContent">
+		<h:form id="personalDataForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li>
+						<h:outputLabel for="matriculationNumber">#{messages['labelMatriculationNumber']}</h:outputLabel>
+						<h:outputText id="matriculationNumber" name="matriculationNumber" value="#{enrollment.student.matriculationNumber}" />
+					</li>
+					<li>
+						<h:outputLabel for="studyplan">#{messages['labelStudyPlan']}</h:outputLabel>
+						<h:outputText id="studyplan" name="studyplan" value="#{enrollment.study}" />
+					</li>
+					<li>
+						<h:outputLabel for="title">#{messages['labelTitle']}</h:outputLabel>
+						<h:outputText id="title" name="title" value="#{enrollment.student.title}" />
+					</li>
+					<li>
+						<h:outputLabel for="firstName">#{messages['labelFirstName']}</h:outputLabel>
+						<h:outputText id="firstName" name="firstName" value="#{enrollment.student.firstName}" />
+					</li>
+					<li>
+						<h:outputLabel for="lastName">#{messages['labelLastName']}</h:outputLabel>
+						<h:outputText id="lastName" name="lastName" value="#{enrollment.student.lastName}" />
+					</li>
+					<li>
+						<h:outputLabel for="birthdate">#{messages['labelBirthdate']}</h:outputLabel>
+						<h:outputText id="birthdate" name="birthdate" value="#{enrollment.student.birthdate}">
+							<f:convertDateTime pattern="#{messages['dateFormat']}" />
+						</h:outputText>
+					</li>
+					<li>
+						<h:outputLabel for="gender">#{messages['labelGender']}</h:outputLabel>
+						<h:outputText id="gender" name="gender" value="#{enrollment.student.gender}" />
+					</li>
+					<li>
+						<h:outputLabel for="citizenship">#{messages['labelCitizenship']}</h:outputLabel>
+						<h:outputText id="citizenship" name="citizenship" value="#{enrollment.student.citizenship}" />
+					</li>
+					<li>
+						<h:outputLabel for="street">#{messages['labelStreet']}</h:outputLabel>
+						<h:outputText id="street" name="street" value="#{enrollment.student.street}" />
+					</li>
+					<li>
+						<h:outputLabel for="postalcode">#{messages['labelPostalcode']}</h:outputLabel>
+						<h:outputText id="postalcode" name="postalcode" value="#{enrollment.student.postalcode}" />
+					</li>
+					<li>
+						<h:outputLabel for="city">#{messages['labelCity']}</h:outputLabel>
+						<h:outputText id="city" name="city" value="#{enrollment.student.city}" />
+					</li>
+					<li>
+						<h:outputLabel for="country">#{messages['labelCountry']}</h:outputLabel>
+						<h:outputText id="country" name="country" value="#{enrollment.student.country}" />
+					</li>
+					<li>
+						<h:outputLabel for="birthName">#{messages['labelBirthName']}</h:outputLabel>
+						<h:outputText id="birthName" name="birthName" value="#{enrollment.student.birthName}" />
+					</li>
+					<li>
+						<h:outputLabel for="phoneNumber">#{messages['labelPhoneNumber']}</h:outputLabel>
+						<h:outputText id="phoneNumber" name="phoneNumber" value="#{enrollment.student.phoneNumber}" />
+					</li>
+					<li>
+						<h:outputLabel for="emailAddress">#{messages['labelEmailAddress']}</h:outputLabel>
+						<h:outputText id="emailAddress" name="emailAddress" value="#{enrollment.student.emailAddress}" />
+					</li>
+				</ol>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
