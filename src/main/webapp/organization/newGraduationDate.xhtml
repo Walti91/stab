@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+ 	<ui:define name="head">
+ 		<script type="text/javascript" src="de.js" />
+ 	</ui:define>
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerGraduationDates']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="newGraduationDateForm">
+			
+				<fieldset class="styledFieldset">
+					<legend>#{messages['labelNewGraduationDate']}</legend>
+					<ol>
+						
+						<h:panelGroup id="dates">
+						
+						<c:forEach items="#{newGraduationDate.graduationDate.dates}" var="examinationDate" varStatus="status">
+							<li>
+							<h:outputLabel for="examinationDate#{status.index}">#{status.index + 1}. #{messages['labelExaminationDate']}</h:outputLabel>
+							<p:calendar id="examinationDate#{status.index}" value="#{examinationDate.date}" pattern="#{messages['dateFormat']}" readonly="true" showOn="false" />
+							<h:commandButton id="remove" value="#{messages['labelRemove']}" action="#{newGraduationDate.remove(examinationDate.id)}">
+								<f:ajax execute="@this" render="dates :globalMessagesPanel" />
+							</h:commandButton>
+							</li>
+						</c:forEach>
+						<li>
+						<h:outputLabel for="newExaminationDate">#{messages['labelNewExaminationDate']}</h:outputLabel>
+						<p:calendar id="newDate" value="#{newGraduationDate.newDate}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" />
+
+							<h:commandButton id="add" value="#{messages['labelAdd']}" action="#{newGraduationDate.add}">
+								<f:ajax execute="newDate" render="dates :globalMessagesPanel" />
+							</h:commandButton>
+							</li>
+						</h:panelGroup>
+						<li>
+							<h:outputLabel for="registrationFrom" class="required">#{messages['labelRegistrationFrom']}</h:outputLabel>
+							<p:calendar id="registrationFrom" value="#{newGraduationDate.graduationDate.registrationFrom}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" required="true" label="#{messages['labelRegistrationFrom']}" />
+							<h:message for="registrationFrom" errorClass="errorMessage" />
+						</li>
+					<li>
+						<h:outputLabel for="registrationTo" class="required">#{messages['labelRegistrationTo']}</h:outputLabel>
+						<p:calendar id="registrationTo" value="#{newGraduationDate.graduationDate.registrationTo}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" required="true" label="#{messages['labelRegistrationTo']}" />
+						<h:message for="registrationTo" errorClass="errorMessage" />
+						
+					</li>
+					<li>
+						<h:outputLabel for="submissionFrom">#{messages['labelSubmissionFrom']}</h:outputLabel>
+						<p:calendar id="submissionFrom" value="#{newGraduationDate.graduationDate.submissionFrom}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" label="#{messages['labelSubmissionFrom']}" />
+						<h:message for="submissionFrom" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="submissionTo">#{messages['labelSubmissionTo']}</h:outputLabel>
+						<p:calendar id="submissionTo" value="#{newGraduationDate.graduationDate.submissionTo}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" label="#{messages['labelSubmissionTo']}" />
+						<h:message for="submissionTo" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="pickupFrom">#{messages['labelPickupFrom']}</h:outputLabel>
+						<p:calendar id="pickupFrom" value="#{newGraduationDate.graduationDate.pickupFrom}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" label="#{messages['labelPickupFrom']}" />
+						<h:message for="pickupFrom" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="pickupTo">#{messages['labelPickupTo']}</h:outputLabel>
+						<p:calendar id="pickupTo" value="#{newGraduationDate.graduationDate.pickupTo}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" label="#{messages['labelPickupTo']}" />
+						<h:message for="pickupTo" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="notes">#{messages['labelNotes']}</h:outputLabel>
+						<h:inputText id="notes" name="notes" value="#{newGraduationDate.graduationDate.notes}" class="xLargeInput" />
+					</li>
+					<li><h:selectBooleanCheckbox id="special"
+									value="#{newGraduationDate.graduationDate.special}" /> <h:outputLabel
+									for="special">#{messages['labelSpecial']}</h:outputLabel></li>
+					<li>
+						<h:commandButton id="save" value="#{messages['labelSave']}" action="#{newGraduationDate.save}" />
+						<h:button id="cancel" value="#{messages['labelCancel']}" outcome="/organization/graduationDates" />
+					</li>
+				</ol>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

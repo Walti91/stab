@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+ 	<ui:define name="head">
+ 		<script type="text/javascript" src="de.js" />
+ 	</ui:define>
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerGraduationCeremonies']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="newGraduationCeremonyForm">
+			<fieldset class="styledFieldset">
+				<legend>#{messages['labelNewGraduationCeremony']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="date" class="required">#{messages['labelDay']}</h:outputLabel>
+						<p:calendar id="date" value="#{newGraduationCeremony.graduationCeremony.date}" showOn="button" pattern="#{messages['dateFormat']}" navigator="true" required="true" label="#{messages['labelDay']}" />
+						<h:message for="date" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="time" class="required">#{messages['labelTime']}</h:outputLabel>
+		        		<p:calendar id="time" value="#{newGraduationCeremony.graduationCeremony.time}" showOn="button" pattern="#{messages['timeFormat']}" timeOnly="true" required="true" label="#{messages['labelTime']}" />
+						<h:message for="time" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="room" class="required">#{messages['labelRoom']}</h:outputLabel>
+						<h:selectOneMenu id="room" name="room" value="#{newGraduationCeremony.graduationCeremony.room}" converter="roomConverter" required="true" label="#{messages['labelRoom']}" class="largeInput">
+							<f:selectItems value="#{newGraduationCeremony.rooms}" var="room" itemLabel="#{room}" itemValue="#{room}" />
+						</h:selectOneMenu>
+						<h:message for="room" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="description">#{messages['labelDescription']}</h:outputLabel>
+						<h:inputText id="description" name="description" value="#{newGraduationCeremony.graduationCeremony.description}" class="largeInput" />
+					</li>
+					<li>
+						<h:commandButton id="save" name="save" value="#{messages['labelSave']}" action="#{newGraduationCeremony.save}" />
+						<h:button id="cancel" name="cancel" value="#{messages['labelCancel']}" outcome="/organization/graduationCeremonies" />
+					</li>
+				</ol>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

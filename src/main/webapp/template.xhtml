@@ -4,7 +4,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
 	<!--
 	Copyright (C) 2016  Florian Waltenberger
 
@@ -38,6 +39,7 @@
 		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/statusMessage.css" />
 		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/static/2.5.2/global/css/widgets.css" />
 		<link rel="stylesheet" media="screen" type="text/css" href="/stab/resources/styles.css" />
+		<ui:insert name="head" />
 	</h:head>
 	<h:body class="organisation de">
 		<div id="glow_left" />
@@ -103,7 +105,10 @@
 											<h:link value="#{messages['linkMasterStudents']}" outcome="/students/masterStudents" class="supNavMenuHeader" />
 										</li>
 										<li>
-											<h:link value="#{messages['linkGraduationDates']}" outcome="/graduationDates/selection" class="supNavMenuHeader" />
+											<h:link value="#{messages['linkGraduationDates']}" outcome="/organization/graduationDates" class="supNavMenuHeader" />
+										</li>
+										<li>
+											<h:link value="#{messages['linkCommissions']}" outcome="/organization/commissions" class="supNavMenuHeader" />
 										</li>
 									</ul>
 								</li>

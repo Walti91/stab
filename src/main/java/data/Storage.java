@@ -28,6 +28,7 @@ import model.CourseOffer;
 import model.Deanery;
 import model.Enrollment;
 import model.Exam;
+import model.ExaminationDate;
 import model.ExaminationSubject;
 import model.GraduationCeremony;
 import model.GraduationDate;
@@ -63,7 +64,8 @@ public class Storage {
 	private LinkedHashMap<String, Study> studies;
 	private LinkedHashMap<Long, Thesis> theses;
 	private LinkedHashMap<String, User> users;
-
+	private LinkedHashMap<Long, ExaminationDate> examinationDates;
+	
 	public Storage() {
 		id = 1L;
 		assignments = new LinkedHashMap<Long, Assignment>();
@@ -84,6 +86,7 @@ public class Storage {
 		studies = new LinkedHashMap<String, Study>();
 		theses = new LinkedHashMap<Long, Thesis>();
 		users = new LinkedHashMap<String, User>();
+		examinationDates = new LinkedHashMap<Long, ExaminationDate>();
 		
 		Generator.fill(this);
 	}
@@ -311,5 +314,24 @@ public class Storage {
 
 	public void saveUser(User user) {
 		users.put(user.getUsername(), user);
+	}
+
+	public void deleteGraduationCeremony(GraduationCeremony graduationCeremony) {
+		graduationCeremonies.remove(graduationCeremony.getId());
+	}
+
+	public void deleteGraduationDate(GraduationDate graduationDate) {
+		graduationDates.remove(graduationDate.getId());
+	}
+
+	public ExaminationDate loadExaminationDate(Long id) {
+		return examinationDates.get(id);
+	}
+
+	public void saveExaminationDate(ExaminationDate examinationDate) {
+		if(examinationDate.getId() == null) {
+			examinationDate.setId(id++);
+		}
+		examinationDates.put(examinationDate.getId(), examinationDate);
 	}
 }

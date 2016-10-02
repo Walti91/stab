@@ -35,13 +35,12 @@ public class GraduationDate implements Serializable {
 	private Date pickupFrom;
 	private Date pickupTo;
 	private String notes;
-	private List<Date> dates;
-	private List<Commission> commissions;
+	private Boolean special;
+	private List<ExaminationDate> dates;
 	private List<Enrollment> enrollments;
 
 	public GraduationDate() {
-		dates = new ArrayList<Date>();
-		commissions = new ArrayList<Commission>();
+		dates = new ArrayList<ExaminationDate>();
 		enrollments = new ArrayList<Enrollment>();
 	}
 
@@ -108,33 +107,25 @@ public class GraduationDate implements Serializable {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	
+	public Boolean getSpecial() {
+		return special;
+	}
 
-	public List<Date> getDates() {
+	public void setSpecial(Boolean special) {
+		this.special = special;
+	}
+
+	public List<ExaminationDate> getDates() {
 		return dates;
 	}
 
-	public void setDates(List<Date> dates) {
+	public void setDates(List<ExaminationDate> dates) {
 		this.dates = dates;
 	}
 
-	public void addDate(Date date) {
+	public void addDate(ExaminationDate date) {
 		dates.add(date);
-	}
-
-	public List<Commission> getCommissions() {
-		return commissions;
-	}
-
-	public void setCommissions(List<Commission> commissions) {
-		this.commissions = commissions;
-	}
-
-	public void addCommission(Commission commission) {
-		commissions.add(commission);
-	}
-	
-	public void removeCommission(Commission commission) {
-		commissions.remove(commission);
 	}
 	
 	public List<Enrollment> getEnrollments() {
@@ -154,8 +145,8 @@ public class GraduationDate implements Serializable {
 			return "Ungespeicherter Abschlusstermin";
 		}
 		SimpleDateFormat stringFormat = new SimpleDateFormat(ResourceBundle.getBundle("messages").getString("stringFormat"));
-		StringBuilder sb = new StringBuilder(stringFormat.format(dates.get(0)));
-		sb.append(" - ").append(stringFormat.format(dates.get(dates.size() - 1)));
+		StringBuilder sb = new StringBuilder(stringFormat.format(dates.get(0).getDate()));
+		sb.append(" - ").append(stringFormat.format(dates.get(dates.size() - 1).getDate()));
 		return sb.toString();
 	}
 }

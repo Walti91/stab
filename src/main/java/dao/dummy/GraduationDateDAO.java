@@ -25,4 +25,8 @@ public class GraduationDateDAO implements IGraduationDateDAO {
 	public void save(GraduationDate graduationDate) {
 		storage.saveGraduationDate(graduationDate);
 	}
+
+	public void delete(GraduationDate graduationDate) {
+		storage.deleteGraduationDate(graduationDate);
+	}
 }

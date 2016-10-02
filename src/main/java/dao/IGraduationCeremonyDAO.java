@@ -11,4 +11,6 @@ public interface IGraduationCeremonyDAO {
 	public List<GraduationCeremony> loadAll();
 	
 	public void save(GraduationCeremony graduationCeremony);
+	
+	public void delete(GraduationCeremony graduationCeremony);
 }

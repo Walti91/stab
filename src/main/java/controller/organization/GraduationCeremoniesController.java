@@ -1,8 +1,10 @@
 package controller.organization;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -11,10 +13,14 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.TabChangeEvent;
+
 import data.Provider;
+import model.Assignment;
 import model.Enrollment;
+import model.Exam;
 import model.GraduationCeremony;
-import model.ModelFactory;
+import model.ModuleAssignment;
 import model.Room;
 
 @ManagedBean(name = "graduationCeremonies")
@@ -22,84 +28,150 @@ import model.Room;
 public class GraduationCeremoniesController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManagedProperty(value = "#{provider}")
 	private Provider provider;
-	
+
 	private List<GraduationCeremony> graduationCeremonies;
-	private Long selectedGraduationCeremony;
-	private Date date;
-	private Date time;
-	private Long room;
+	private GraduationCeremony selectedGraduationCeremony;
 	private List<Room> rooms;
-	private String description;
-	private Boolean newGraduationCeremony;
-	private List<Enrollment> enrollments;
+	private Integer tabIndex;
+	
+	private Integer bachelors;
+	private Integer bachelorsMale;
+	private Integer bachelorsFemale;
+	private Integer bachelorsDistinction;
+	private Integer masters;
+	private Integer mastersMale;
+	private Integer mastersFemale;
+	private Integer mastersDistinction;
 
 	@PostConstruct
 	public void init() {
-		graduationCeremonies = provider.loadAllGraduationCeremonies();
+		tabIndex = 0;
 		rooms = provider.loadAllRooms();
-		newGraduationCeremony = false;
-		if (!graduationCeremonies.isEmpty()) {
-			selectedGraduationCeremony = graduationCeremonies.get(0).getId();
-			update();
-		}
-	}
+		graduationCeremonies = provider.loadAllGraduationCeremonies();
+		if (graduationCeremonies != null && !graduationCeremonies.isEmpty()) {
+			Collections.sort(graduationCeremonies, new Comparator<GraduationCeremony>() {
+				@Override
+				public int compare(GraduationCeremony ceremony1, GraduationCeremony ceremony2) {
 
-	public void update() {
-		if (selectedGraduationCeremony != null) {
-			GraduationCeremony graduationCeremony = provider.loadGraduationCeremony(selectedGraduationCeremony);
-			date = graduationCeremony.getDate();
-			time = graduationCeremony.getTime();
-			room = graduationCeremony.getRoom().getId();
-			description = graduationCeremony.getDescription();
-			enrollments = graduationCeremony.getEnrollments();
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Bitte wählen Sie eine Sponsion aus!", "Bitte wählen Sie eine Sponsion aus!"));
+					return ceremony2.getDate().compareTo(ceremony1.getDate());
+				}
+			});
+			Object graduationCeremony = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("graduationCeremony");
+			if(graduationCeremony != null && graduationCeremonies.contains(graduationCeremony)) {
+				selectedGraduationCeremony = (GraduationCeremony) graduationCeremony;
+			} else {
+				selectedGraduationCeremony = graduationCeremonies.get(0);
+				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony",
+						selectedGraduationCeremony);
+			}
+		}
+		statistics();
+	}
+	
+	public void statistics() {
+		bachelors = 0;
+		bachelorsMale = 0;
+		bachelorsFemale = 0;
+		bachelorsDistinction = 0;
+		masters = 0;
+		mastersMale = 0;
+		mastersFemale = 0;
+		mastersDistinction = 0;
+		
+		for(Enrollment enrollment : selectedGraduationCeremony.getEnrollments()) {
+			if(enrollment.getStudy().getType().equals("Masterstudium")) {
+				masters++;
+				if(enrollment.getStudent().getGender().equals("männlich")) {
+					mastersMale++;
+				} else {
+					mastersFemale++;
+				}
+				if(enrollment.getAssignments() != null && !enrollment.getAssignments().isEmpty()) {
+					Double counter = 0.0;
+					for(Assignment assignment : enrollment.getAssignments()) {
+						for(ModuleAssignment moduleAssignment : assignment.getModuleAssignments()) {
+							for(Exam exam : moduleAssignment.getExams()) {
+								counter += exam.getGrade() * exam.getCourse().getCourseOffer().getEcts();
+							}
+						}
+					}
+					if(counter / 120 < 1.5) {
+						mastersDistinction++;
+					}
+				}
+			} else {
+				bachelors++;
+				if(enrollment.getStudent().getGender().equals("männlich")) {
+					bachelorsMale++;
+				} else {
+					bachelorsFemale++;
+				}
+				if(enrollment.getAssignments() != null && !enrollment.getAssignments().isEmpty()) {
+					Double counter = 0.0;
+					for(Assignment assignment : enrollment.getAssignments()) {
+						for(ModuleAssignment moduleAssignment : assignment.getModuleAssignments()) {
+							for(Exam exam : moduleAssignment.getExams()) {
+								counter += exam.getGrade() * exam.getCourse().getCourseOffer().getEcts();
+							}
+						}
+					}
+					if(counter / 180 < 1.5) {
+						bachelorsDistinction++;
+					}
+				}
+			}
 		}
 	}
 
 	public String save() {
-		if(date == null || time == null || room == null) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Bitte beachten Sie die verpflichtenden Felder!", "Bitte beachten Sie die verpflichtenden Felder!"));
-			return null;
-		}
-		GraduationCeremony graduationCeremony;
-		if (newGraduationCeremony) {
-			graduationCeremony = new ModelFactory().createGraduationCeremony();
-			provider.saveGraduationCeremony(graduationCeremony);
-			graduationCeremonies.add(graduationCeremony);
-			newGraduationCeremony = false;
-			selectedGraduationCeremony = graduationCeremony.getId();
-		} else if (selectedGraduationCeremony != null) {
-			graduationCeremony = provider.loadGraduationCeremony(selectedGraduationCeremony);
-		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fehler beim Speichern der Sponsion!", "Fehler beim Speichern der Sponsion!"));
-			return null;
-		}
-		graduationCeremony.setDate(date);
-		graduationCeremony.setTime(time);
-		graduationCeremony.setRoom(provider.loadRoom(room));
-		graduationCeremony.setDescription(description);
-		return null;
-	}
-
-	public String add() {
-		newGraduationCeremony = true;
-		date = null;
-		time = null;
-		if(!rooms.isEmpty()) {
-			room = rooms.get(0).getId();
-		}
-		description = null;
-		enrollments = null;
+		provider.saveGraduationCeremony(selectedGraduationCeremony);
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
+						ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
 		return null;
 	}
 	
+	public void delete() {
+		for(Enrollment enrollment : selectedGraduationCeremony.getEnrollments()) {
+			enrollment.setGraduationDate(null);
+		}
+		provider.deleteGraduationCeremony(selectedGraduationCeremony);
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyDeleted"),
+						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyDeleted")));
+		init();
+	}
+	
+	public void update() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony", selectedGraduationCeremony);
+		statistics();
+	}
+	
+	public void previous() {
+		int index = graduationCeremonies.indexOf(selectedGraduationCeremony);
+		if(index > 0) {
+			selectedGraduationCeremony = graduationCeremonies.get(index - 1);
+			update();
+		}
+	}
+	
+	public void next() {
+		int index = graduationCeremonies.indexOf(selectedGraduationCeremony);
+		if(index < graduationCeremonies.size() - 1) {
+			selectedGraduationCeremony = graduationCeremonies.get(index + 1);
+			update();
+		}
+	}
+	
+	public void updateTabIndex(TabChangeEvent event) {
+        tabIndex = event.getComponent().getChildren().indexOf(event.getTab());
+    }
+
 	public void setProvider(Provider provider) {
 		this.provider = provider;
 	}
@@ -108,55 +180,55 @@ public class GraduationCeremoniesController implements Serializable {
 		return graduationCeremonies;
 	}
 
-	public Long getSelectedGraduationCeremony() {
+	public GraduationCeremony getSelectedGraduationCeremony() {
 		return selectedGraduationCeremony;
 	}
 
-	public void setSelectedGraduationCeremony(Long selection) {
-		this.selectedGraduationCeremony = selection;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-	public Long getRoom() {
-		return room;
-	}
-
-	public void setRoom(Long room) {
-		this.room = room;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setSelectedGraduationCeremony(GraduationCeremony selectedGraduationCeremony) {
+		this.selectedGraduationCeremony = selectedGraduationCeremony;
 	}
 
 	public List<Room> getRooms() {
 		return rooms;
 	}
 
-	public Boolean getNewGraduationCeremony() {
-		return newGraduationCeremony;
+	public Integer getTabIndex() {
+		return tabIndex;
 	}
-	
-	public List<Enrollment> getEnrollments() {
-		return enrollments;
+
+	public void setTabIndex(Integer tabIndex) {
+		this.tabIndex = tabIndex;
+	}
+
+	public Integer getBachelors() {
+		return bachelors;
+	}
+
+	public Integer getBachelorsMale() {
+		return bachelorsMale;
+	}
+
+	public Integer getBachelorsFemale() {
+		return bachelorsFemale;
+	}
+
+	public Integer getBachelorsDistinction() {
+		return bachelorsDistinction;
+	}
+
+	public Integer getMasters() {
+		return masters;
+	}
+
+	public Integer getMastersMale() {
+		return mastersMale;
+	}
+
+	public Integer getMastersFemale() {
+		return mastersFemale;
+	}
+
+	public Integer getMastersDistinction() {
+		return mastersDistinction;
 	}
 }

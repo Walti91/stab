@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+ 	<ui:define name="head">
+ 		<script type="text/javascript" src="de.js" />
+ 	</ui:define>
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerCommissions']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="newCommissionForm">
+			<fieldset class="styledFieldset">
+				<legend>#{messages['labelNewCommission']}</legend>
+				<ol>
+					<li>
+						<h:outputLabel for="date" class="required">#{messages['labelDate']}</h:outputLabel>
+						<h:selectOneMenu id="date" value="#{newCommission.commission.examinationDate}" converter="examinationDateConverter" class="largeInput">
+							<f:selectItems value="#{graduationDate.dates}" var="examinationDate" itemLabel="#{newCommission.format(examinationDate.date)}" itemValue="#{examinationDate}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="from" class="required">#{messages['labelFrom']}</h:outputLabel>
+						<p:calendar id="from" value="#{newCommission.commission.from}" showOn="button" pattern="#{messages['timeFormat']}" timeOnly="true" required="true" label="#{messages['labelFrom']}" />
+						<h:message for="from" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="to" class="required">#{messages['labelTo']}</h:outputLabel>
+						<p:calendar id="to" value="#{newCommission.commission.to}" showOn="button" pattern="#{messages['timeFormat']}" timeOnly="true" required="true" label="#{messages['labelTo']}" />
+						<h:message for="to" errorClass="errorMessage" />
+					</li>
+					<li>
+						<h:outputLabel for="room" class="required">#{messages['labelRoom']}</h:outputLabel>
+						<h:selectOneMenu id="room" value="#{newCommission.commission.room}" converter="roomConverter" class="largeInput">
+							<f:selectItems value="#{newCommission.rooms}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:outputLabel for="chairman" class="required">#{messages['labelChairman']}</h:outputLabel>
+						<h:selectOneMenu id="chairman" value="#{newCommission.commission.chairman}" converter="professorConverter" class="largeInput">
+							<f:selectItems value="#{newCommission.professors}" />
+						</h:selectOneMenu>
+					</li>
+					<li>
+						<h:commandButton id="save" value="#{messages['labelSave']}" action="#{newCommission.save}" />
+						<h:button id="cancel" value="#{messages['labelCancel']}" outcome="/organization/commissions" />
+					</li>
+				</ol>
+			</fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

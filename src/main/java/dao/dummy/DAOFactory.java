@@ -24,6 +24,7 @@ import dao.ICourseOfferDAO;
 import dao.IDeaneryDAO;
 import dao.IEnrollmentDAO;
 import dao.IExamDAO;
+import dao.IExaminationDateDAO;
 import dao.IExaminationSubjectDAO;
 import dao.IGraduationCeremonyDAO;
 import dao.IGraduationDateDAO;
@@ -120,5 +121,9 @@ public class DAOFactory {
 	
 	public IUserDAO createUserDAO() {
 		return new UserDAO(storage);
+	}
+	
+	public IExaminationDateDAO createExaminationDateDAO() {
+		return new ExaminationDateDAO(storage);
 	}
 }

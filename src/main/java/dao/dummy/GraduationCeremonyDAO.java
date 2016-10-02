@@ -25,4 +25,8 @@ public class GraduationCeremonyDAO implements IGraduationCeremonyDAO {
 	public void save(GraduationCeremony graduationCeremony) {
 		storage.saveGraduationCeremony(graduationCeremony);
 	}
+
+	public void delete(GraduationCeremony graduationCeremony) {
+		storage.deleteGraduationCeremony(graduationCeremony);
+	}
 }

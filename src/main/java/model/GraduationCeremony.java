@@ -1,13 +1,15 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GraduationCeremony {
+public class GraduationCeremony implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Date date;
 	private Date time;
@@ -74,7 +76,7 @@ public class GraduationCeremony {
 	public String toString() {
 		SimpleDateFormat stringFormat = new SimpleDateFormat(ResourceBundle.getBundle("messages").getString("stringFormat"));
 		StringBuilder sb = new StringBuilder(stringFormat.format(date));
-		if(description != null) {
+		if(description != null && !description.isEmpty()) {
 			sb.append(" (").append(description).append(")");
 		}
 		return sb.toString();

@@ -11,4 +11,6 @@ public interface IGraduationDateDAO {
 	public List<GraduationDate> loadAll();
 	
 	public void save(GraduationDate graduationDate);
+
+	public void delete(GraduationDate graduationDate);
 }

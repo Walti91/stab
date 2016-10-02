@@ -94,4 +94,8 @@ public class ModelFactory {
 	public User createUser() {
 		return new User();
 	}
+	
+	public ExaminationDate createExaminationDate() {
+		return new ExaminationDate();
+	}
 }

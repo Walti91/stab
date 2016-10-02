@@ -5,13 +5,17 @@ import java.util.Date;
 public class Commission {
 
 	private Long id;
-	private Date date;
 	private Date from;
 	private Date to;
 	private Room room;
+	private Long[] grades;
 	private Professor chairman;
 	private Enrollment enrollment;
-	private GraduationDate graduationDate;
+	private ExaminationDate examinationDate;
+	
+	public Commission() {
+		grades = new Long[3];
+	}
 
 	public Long getId() {
 		return id;
@@ -19,14 +23,6 @@ public class Commission {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
 	}
 
 	public Date getFrom() {
@@ -52,6 +48,14 @@ public class Commission {
 	public void setRoom(Room room) {
 		this.room = room;
 	}
+	
+	public Long[] getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Long[] grades) {
+		this.grades = grades;
+	}
 
 	public Professor getChairman() {
 		return chairman;
@@ -69,11 +73,11 @@ public class Commission {
 		this.enrollment = enrollment;
 	}
 
-	public GraduationDate getGraduationDate() {
-		return graduationDate;
+	public ExaminationDate getExaminationDate() {
+		return examinationDate;
 	}
 
-	public void setGraduationDate(GraduationDate graduationDate) {
-		this.graduationDate = graduationDate;
+	public void setExaminationDate(ExaminationDate examinationDate) {
+		this.examinationDate = examinationDate;
 	}
 }

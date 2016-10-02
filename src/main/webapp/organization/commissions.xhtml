@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+ 	<ui:define name="head">
+ 		<script type="text/javascript" src="de.js" />
+ 	</ui:define>
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerCommissions']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="commissionsForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li>
+						<h:outputLabel for="graduationDate">#{messages['labelGraduationDate']}</h:outputLabel>
+						<h:selectOneMenu id="graduationDate" value="#{commissions.selectedGraduationDate}" converter="graduationDateConverter" required="true" label="#{messages['labelGraduationDate']}" class="largeInput">
+							<f:selectItems value="#{commissions.graduationDates}" var="graduationDate" itemLabel="#{graduationDate}" itemValue="#{graduationDate}" />
+							<f:ajax execute="@this" render="@form :globalMessagesPanel" listener="#{commissions.update}" />
+						</h:selectOneMenu>
+						<h:message for="graduationDate" errorClass="errorMessage" />
+					</li>
+				</ol>
+			</fieldset>
+			<c:forEach items="#{commissions.selectedGraduationDate.dates}" var="examinationDate">
+				<c:forEach items="#{examinationDate.commissions}" var="commission">
+						<fieldset class="styledFieldset">
+							<legend>#{messages['labelCommission']}</legend>
+							<ol>
+								<li>
+									<h:outputLabel for="commission#{commission.id}date">#{messages['labelDate']}</h:outputLabel>
+									<h:outputText id="commission#{commission.id}date" name="commission#{commission.id}date" value="#{commission.examinationDate.date}">
+										<f:convertDateTime pattern="#{messages['dateFormat']}" />
+									</h:outputText>
+								</li>
+								<li>
+									<h:outputLabel for="commission#{commission.id}from">#{messages['labelFrom']}</h:outputLabel>
+									<h:outputText id="commission#{commission.id}from" name="commission#{commission.id}from" value="#{commission.from}">
+										<f:convertDateTime pattern="#{messages['timeFormat']}" />
+									</h:outputText>
+								</li>
+								<li>
+									<h:outputLabel for="commission#{commission.id}to">#{messages['labelTo']}</h:outputLabel>
+									<h:outputText id="commission#{commission.id}to" name="commission#{commission.id}to" value="#{commission.to}">
+										<f:convertDateTime pattern="#{messages['timeFormat']}" />
+									</h:outputText>
+								</li>
+								<li>
+									<h:outputLabel for="commission#{commission.id}room">#{messages['labelRoom']}</h:outputLabel>
+									<h:outputText id="commission#{commission.id}room" name="commission#{commission.id}room" value="#{commission.room}" />
+								</li>
+								<li>
+									<h:outputLabel for="commission#{commission.id}chairman">#{messages['labelChairman']}</h:outputLabel>
+									<h:outputText id="commission#{commission.id}chairman" name="commission#{commission.id}chairman" value="#{commission.chairman}" />
+								</li>
+								<li>
+									<h:outputLabel for="commission#{commission.id}student">#{messages['labelStudent']}</h:outputLabel>
+									<h:selectOneMenu id="commission#{commission.id}student" name="commission#{commission.id}student" value="#{commission.enrollment}" converter="enrollmentConverter" class="largeInput">
+										<f:selectItem itemLabel=" " itemValue="#{null}" />
+										<f:selectItems value="#{commissions.enrollments}" var="enrollment" itemLabel="#{commissions.validateEnrollment(enrollment)}" itemValue="#{enrollment}" />
+										<f:ajax execute="@this" render="@form :globalMessagesPanel" listener="#{commissions.change(commission.id)}" />
+									</h:selectOneMenu>
+									
+								</li>
+								<li>
+									<h:commandButton id="deleteCommission#{commission.id}" name="deleteCommission#{commission.id}" value="#{messages['labelDelete']}" action="#{commissions.deleteCommission(commission.id)}">
+										<f:ajax execute="@this" render="@form" />
+									</h:commandButton>
+								</li>
+							</ol>
+						</fieldset>
+						</c:forEach>
+					</c:forEach>
+			<h:button id="new" value="#{messages['labelNew']}" outcome="/organization/newCommission" />
+		</h:form>
+	</ui:define>
+</ui:composition>

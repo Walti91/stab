@@ -30,6 +30,7 @@ import dao.ICourseOfferDAO;
 import dao.IDeaneryDAO;
 import dao.IEnrollmentDAO;
 import dao.IExamDAO;
+import dao.IExaminationDateDAO;
 import dao.IExaminationSubjectDAO;
 import dao.IGraduationCeremonyDAO;
 import dao.IGraduationDateDAO;
@@ -50,6 +51,7 @@ import model.CourseOffer;
 import model.Deanery;
 import model.Enrollment;
 import model.Exam;
+import model.ExaminationDate;
 import model.ExaminationSubject;
 import model.GraduationCeremony;
 import model.GraduationDate;
@@ -87,6 +89,7 @@ public class Provider {
 	private IStudyDAO studyDAO;
 	private IThesisDAO thesisDAO;
 	private IUserDAO userDAO;
+	private IExaminationDateDAO examinationDateDAO;
 
 	@PostConstruct
 	public void init() {
@@ -111,6 +114,7 @@ public class Provider {
 		studyDAO = factory.createStudyDAO();
 		thesisDAO = factory.createThesisDAO();
 		userDAO = factory.createUserDAO();
+		examinationDateDAO = factory.createExaminationDateDAO();
 	}
 
 	public Assignment loadAssignment(Long id) {
@@ -291,5 +295,21 @@ public class Provider {
 
 	public void saveUser(User user) {
 		userDAO.save(user);
+	}
+	
+	public void deleteGraduationCeremony(GraduationCeremony graduationCeremony) {
+		graduationCeremonyDAO.delete(graduationCeremony);
+	}
+
+	public void deleteGraduationDate(GraduationDate graduationDate) {
+		graduationDateDAO.delete(graduationDate);
+	}
+	
+	public ExaminationDate loadExaminationDate(Long id) {
+		return examinationDateDAO.load(id);
+	}
+
+	public void saveExaminationDate(ExaminationDate examinationDate) {
+		examinationDateDAO.save(examinationDate);
 	}
 }

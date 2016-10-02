@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<!--
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 	 -->
+	<ui:define name="head">
+		<script type="text/javascript" src="de.js" />
+	</ui:define>
+	<ui:define name="header">
+		<h1>#{messages['headerTitle']}</h1>
+		<div class="subHeader">#{messages['headerGraduationDates']}</div>
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="graduationDatesForm">
+			<fieldset class="nonStyledFieldset">
+				<ol>
+					<li><h:outputLabel for="graduationDate">#{messages['labelGraduationDate']}</h:outputLabel>
+						<h:selectOneMenu id="graduationDate"
+							value="#{graduationDates.selectedGraduationDate}"
+							converter="graduationDateConverter" required="true"
+							label="#{messages['labelGraduationDate']}" class="largeInput">
+							<f:selectItems value="#{graduationDates.graduationDates}"
+								var="graduationDate" itemLabel="#{graduationDate}"
+								itemValue="#{graduationDate}" />
+							<f:ajax execute="@this" render="@form :globalMessagesPanel"
+								listener="#{graduationDates.update}" />
+						</h:selectOneMenu> <h:message for="graduationDate" errorClass="errorMessage" /> <h:button
+							id="new" value="#{messages['labelNew']}"
+							outcome="/organization/newGraduationDate" /> <p:commandButton
+							id="delete" value="#{messages['labelDelete']}" type="button"
+							onclick="PF('confirmDelete').show();" /></li>
+				</ol>
+			</fieldset>
+			<p:tabView activeIndex="#{graduationDates.tabIndex}">
+				<p:ajax event="tabChange"
+					listener="#{graduationDates.updateTabIndex}" />
+				<p:tab title="#{messages['linkOverview']}">
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelGraduationDate']}</legend>
+						<ol>
+
+							<h:panelGroup id="dates">
+
+								<c:forEach items="#{graduationDates.dates}"
+									var="examinationDate" varStatus="status">
+									<li><h:outputLabel for="examinationDate#{status.index}">#{status.index + 1}. #{messages['labelExaminationDate']}</h:outputLabel>
+										<p:calendar id="examinationDate#{status.index}"
+											value="#{examinationDate.date}"
+											pattern="#{messages['dateFormat']}" readonly="true"
+											showOn="false" /> <h:commandButton id="remove"
+											value="#{messages['labelRemove']}"
+											action="#{graduationDates.remove(examinationDate.id)}">
+											<f:ajax execute="@this" render="dates :globalMessagesPanel" />
+										</h:commandButton></li>
+								</c:forEach>
+								<li><h:outputLabel for="newExaminationDate">#{messages['labelNewExaminationDate']}</h:outputLabel>
+									<p:calendar id="newExaminationDate"
+										value="#{graduationDates.newDate}" showOn="button"
+										pattern="#{messages['dateFormat']}" navigator="true" /> <h:commandButton
+										id="add" value="#{messages['labelAdd']}"
+										action="#{graduationDates.add}">
+										<f:ajax execute="newDate" render="dates :globalMessagesPanel" />
+									</h:commandButton></li>
+							</h:panelGroup>
+							<li><h:outputLabel for="registrationFrom" class="required">#{messages['labelRegistrationFrom']}</h:outputLabel>
+								<p:calendar id="registrationFrom"
+									value="#{graduationDates.selectedGraduationDate.registrationFrom}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" required="true"
+									label="#{messages['labelRegistrationFrom']}" /> <h:message
+									for="registrationFrom" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="registrationTo" class="required">#{messages['labelRegistrationTo']}</h:outputLabel>
+								<p:calendar id="registrationTo"
+									value="#{graduationDates.selectedGraduationDate.registrationTo}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" required="true"
+									label="#{messages['labelRegistrationTo']}" /> <h:message
+									for="registrationTo" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="submissionFrom">#{messages['labelSubmissionFrom']}</h:outputLabel>
+								<p:calendar id="submissionFrom"
+									value="#{graduationDates.selectedGraduationDate.submissionFrom}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" label="#{messages['labelSubmissionFrom']}" />
+								<h:message for="submissionFrom" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="submissionTo">#{messages['labelSubmissionTo']}</h:outputLabel>
+								<p:calendar id="submissionTo"
+									value="#{graduationDates.selectedGraduationDate.submissionTo}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" label="#{messages['labelSubmissionTo']}" /> <h:message
+									for="submissionTo" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="pickupFrom">#{messages['labelPickupFrom']}</h:outputLabel>
+								<p:calendar id="pickupFrom"
+									value="#{graduationDates.selectedGraduationDate.pickupFrom}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" label="#{messages['labelPickupFrom']}" /> <h:message
+									for="pickupFrom" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="pickupTo">#{messages['labelPickupTo']}</h:outputLabel>
+								<p:calendar id="pickupTo"
+									value="#{graduationDates.selectedGraduationDate.pickupTo}"
+									showOn="button" pattern="#{messages['dateFormat']}"
+									navigator="true" label="#{messages['labelPickupTo']}" /> <h:message
+									for="pickupTo" errorClass="errorMessage" /></li>
+							<li><h:outputLabel for="notes">#{messages['labelNotes']}</h:outputLabel>
+								<h:inputText id="notes" name="notes"
+									value="#{graduationDates.selectedGraduationDate.notes}"
+									class="xLargeInput" /></li>
+							<li><h:selectBooleanCheckbox id="special"
+									value="#{graduationDates.selectedGraduationDate.special}" /> <h:outputLabel
+									for="special">#{messages['labelSpecial']}</h:outputLabel></li>
+							<li><h:commandButton id="save"
+									value="#{messages['labelSave']}"
+									action="#{graduationDates.save}" /> <h:button id="reset"
+									value="#{messages['labelReset']}"
+									outcome="/organization/graduationDates" /></li>
+						</ol>
+					</fieldset>
+				</p:tab>
+				<p:tab title="#{messages['linkInformation']}">
+					<p>
+						<h:outputText value="#{graduationDates.validateConfirmed()}" />
+					</p>
+					<p>
+						<h:outputText value="#{graduationDates.validateAgreement()}" />
+					</p>
+				</p:tab>
+				<p:tab title="#{messages['linkCommissionGrades']}">
+					<p:dataTable var="enrollment"
+						value="#{graduationDates.selectedGraduationDate.enrollments}">
+						<p:column headerText="#{messages['labelStudent']}">
+							<h:outputText value="#{enrollment.student}" />
+						</p:column>
+
+						<p:column headerText="1.">
+							<h:outputText value="#{enrollment.commission.grades[0]}" />
+						</p:column>
+
+						<p:column headerText="2.">
+							<h:outputText value="#{enrollment.commission.grades[1]}" />
+						</p:column>
+
+						<p:column headerText="3.">
+							<h:outputText value="#{enrollment.commission.grades[2]}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelSum']}">
+							<h:outputText
+								value="#{graduationDates.calculateSum(enrollment.commission.grades)}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:tab>
+				<p:tab title="#{messages['linkStatistics']}">
+					<fieldset class="nonStyledFieldset">
+						<legend>#{messages['labelNumberGraduationsForGraduationDate']}</legend>
+					</fieldset>
+					<div class="ui-datatable ui-widget">
+						<div class="ui-datatable-tablewrapper">
+							<table role="grid">
+								<thead>
+									<tr role="row">
+										<th class="ui-state-default" role="columnheader"><span
+											class="ui-column-title">#{messages['labelNumber']}</span></th>
+										<th class="ui-state-default" role="columnheader"><span
+											class="ui-column-title">#{messages['labelDistinction']}</span>
+										</th>
+										<th class="ui-state-default" role="columnheader"><span
+											class="ui-column-title">#{messages['labelFemale']}</span></th>
+										<th class="ui-state-default" role="columnheader"><span
+											class="ui-column-title">#{messages['labelMale']}</span></th>
+									</tr>
+								</thead>
+								<tbody class="ui-datatable-data ui-widget-content">
+									<tr class="ui-widget-content ui-datatable-even">
+										<td><h:outputText
+												value="#{graduationDates.masters}" /></td>
+										<td><h:outputText
+												value="#{graduationDates.mastersDistinction}" /></td>
+										<td><h:outputText
+												value="#{graduationDates.mastersFemale}"></h:outputText></td>
+										<td><h:outputText value="#{graduationDates.mastersMale}" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</p:tab>
+				<p:tab title="#{messages['linkDocuments']}">
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelGraduateList']}</legend>
+						<ul>
+							<li><h:button id="graduateList"
+									value="#{messages['labelOpenXls']}" /></li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelAddressList']}</legend>
+						<ul>
+							<li><h:button id="printAddresses"
+									value="#{messages['labelPrint']}" /> <h:button
+									id="archiveAddresses" value="#{messages['labelArchive']}" /> <h:button
+									id="openArchiveAddresses"
+									value="#{messages['labelOpenFromArchive']}" /> <h:button
+									id="openRtfAddresses" value="#{messages['labelOpenRtf']}" /> <h:selectBooleanCheckbox
+									id="duplexAddresses" /> <h:outputLabel for="duplexAddresses">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelThesisList']}</legend>
+						<ul>
+							<li><h:button id="printTheses"
+									value="#{messages['labelPrint']}" /> <h:button
+									id="archiveTheses" value="#{messages['labelArchive']}" /> <h:button
+									id="openArchiveTheses"
+									value="#{messages['labelOpenFromArchive']}" /> <h:selectBooleanCheckbox
+									id="duplexTheses" /> <h:outputLabel for="duplexTheses">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelCandidatesCommissions']}</legend>
+						<ul>
+							<li><h:button id="printCandidates"
+									value="#{messages['labelPrint']}" /> <h:button
+									id="archiveCandidates" value="#{messages['labelArchive']}" />
+								<h:button id="openArchiveCandidates"
+									value="#{messages['labelOpenFromArchive']}" /> <h:button
+									id="openRtfCandidates" value="#{messages['labelOpenRtf']}" />
+								<h:selectBooleanCheckbox id="duplexCandidates" /> <h:outputLabel
+									for="duplexCandidates">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelExaminationSubjectsList']}</legend>
+						<ul>
+							<li><h:button id="printSubjects"
+									value="#{messages['labelPrint']}" /> <h:button
+									id="archiveSubjects" value="#{messages['labelArchive']}" /> <h:button
+									id="openArchiveSubjects"
+									value="#{messages['labelOpenFromArchive']}" /> <h:selectBooleanCheckbox
+									id="duplexSubjects" /> <h:outputLabel for="duplexSubjects">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelExaminationDatesList']}</legend>
+						<ul>
+							<li><h:button id="printDates"
+									value="#{messages['labelPrint']}" /> <h:button
+									id="archiveDates" value="#{messages['labelArchive']}" /> <h:button
+									id="openArchiveDates"
+									value="#{messages['labelOpenFromArchive']}" /> <h:button
+									id="openRtfDates" value="#{messages['labelOpenRtf']}" /> <h:selectBooleanCheckbox
+									id="duplexDates" /> <h:outputLabel for="duplexDates">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelIcalDates']}</legend>
+						<ul>
+							<li><h:button id="ical" value="#{messages['labelOpenIcs']}" />
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="nonStyledFieldset">
+						<legend>#{messages['labelStudentsDocuments']}</legend>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelNotice']}</legend>
+						<ul>
+							<li><h:button id="printNotice"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexNotice" /> <h:outputLabel for="duplexNotice">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelDiploma']}</legend>
+						<ul>
+							<li><h:button id="printDiploma"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexDiploma" /> <h:outputLabel for="duplexDiploma">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelDiplomaSupplement']}</legend>
+						<ul>
+							<li><h:button id="printDiplomaSupplement"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexDiplomaSupplement" /> <h:outputLabel
+									for="duplexDiplomaSupplement">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelExaminationProtocol']}</legend>
+						<ul>
+							<li><h:button id="printProtocol"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexProtocol" /> <h:outputLabel for="duplexProtocol">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelStatisticsStudies']}</legend>
+						<ul>
+							<li><h:button id="printStudies"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexStudies" /> <h:outputLabel for="duplexStudies">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelCertificate']}</legend>
+						<ul>
+							<li><h:button id="printCertificate"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexCertificate" /> <h:outputLabel for="duplexCertificate">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelOverviewAssignments']}</legend>
+						<ul>
+							<li><h:button id="printAssignments"
+									value="#{messages['labelPrint']}" /> <h:selectBooleanCheckbox
+									id="duplexAssignments" /> <h:outputLabel for="duplexAssignments">#{messages['labelDuplex']}</h:outputLabel>
+							</li>
+						</ul>
+					</fieldset>
+					</fieldset>
+					<fieldset class="nonStyledFieldset">
+					<legend>#{messages['labelProfessorsDocuments']}</legend>
+					</fieldset>
+				</p:tab>
+				<p:tab title="#{messages['linkNotifications']}">
+				<fieldset class="styledFieldset">
+						<legend>#{messages['labelReadyDocumentsStudents']}</legend>
+						<ul>
+							<li><h:button id="generateDocuments"
+									value="#{messages['labelGenerateNotifications']}" /> 
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelExaminationDateProfessors']}</legend>
+						<ul>
+							<li><h:button id="generateExaminationDatesProfessors"
+									value="#{messages['labelGenerateNotifications']}" /> 
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelExaminationDateStudents']}</legend>
+						<ul>
+							<li><h:button id="generateExaminationDatesStudents"
+									value="#{messages['labelGenerateNotifications']}" /> 
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelAppointmentDemandProfessors']}</legend>
+						<ul>
+							<li><h:button id="generateAppointmentDemandProfessors"
+									value="#{messages['labelGenerateNotifications']}" /> 
+							</li>
+						</ul>
+					</fieldset>
+					<fieldset class="styledFieldset">
+						<legend>#{messages['labelEmailAddresses']}</legend>
+							<ul>
+								<li>
+									<h:button id="students" value="#{messages['labelStudents']}" />
+									<h:button id="professors" value="#{messages['labelAllProfessors']}" />
+									<h:button id="examiner" value="#{messages['labelExaminer']}" />
+									<h:button id="chairmen" value="#{messages['labelChairmen']}" />
+								</li>
+							</ul>
+					</fieldset>
+				</p:tab>
+			</p:tabView>
+			<p:dialog header="#{messages['labelConfirmation']}"
+				widgetVar="confirmDelete" modal="true">
+				<p>
+					<h:outputText value="#{messages['msgConfirmGraduationDateDelete']}" />
+				</p>
+				<h:commandButton id="confirm" value="#{messages['labelConfirm']}"
+					action="#{graduationDates.delete}"
+					update="@form :globalMessagesPanel" />
+				<p:commandButton id="cancel" value="#{messages['labelCancel']}"
+					type="button" onclick="PF('confirmDelete').hide();" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
