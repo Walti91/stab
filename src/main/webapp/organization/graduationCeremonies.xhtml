@@ -96,59 +96,28 @@
 					<fieldset class="nonStyledFieldset">
 						<legend>#{messages['labelNumberGraduationsForCeremony']}</legend>
 					</fieldset>
-					<div class="ui-datatable ui-widget">
-						<div class="ui-datatable-tablewrapper">
-							<table role="grid">
-								<thead>
-									<tr role="row">
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title"></span></th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelNumber']}</span></th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelDistinction']}</span>
-										</th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelFemale']}</span></th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelMale']}</span></th>
-									</tr>
-								</thead>
-								<tbody class="ui-datatable-data ui-widget-content">
-									<tr class="ui-widget-content ui-datatable-even">
-										<td>#{messages['labelBachelors']}</td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelors}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelorsDistinction}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelorsFemale}"></h:outputText></td>
-										<td><h:outputText value="#{graduationCeremonies.bachelorsMale}" /></td>
-									</tr>
-									<tr class="ui-widget-content ui-datatable-even">
-										<td>#{messages['labelMasters']}</td>
-										<td><h:outputText
-												value="#{graduationCeremonies.masters}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.mastersDistinction}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.mastersFemale}"></h:outputText></td>
-										<td><h:outputText value="#{graduationCeremonies.mastersMale}" /></td>
-									</tr>
-									<tr class="ui-widget-content ui-datatable-even">
-										<td>#{messages['labelSum']}</td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelors + graduationCeremonies.masters}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelorsDistinction + graduationCeremonies.mastersDistinction}" /></td>
-										<td><h:outputText
-												value="#{graduationCeremonies.bachelorsFemale + graduationCeremonies.mastersFemale}"></h:outputText></td>
-										<td><h:outputText value="#{graduationCeremonies.bachelorsMale + graduationCeremonies.mastersMale}" /></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+					<p:dataTable var="statisticResult"
+						value="#{statistic.handleGraduationCeremony()}">
+						<p:column headerText="">
+							<h:outputText value="#{statisticResult.description}" />
+						</p:column>
+						
+						<p:column headerText="#{messages['labelNumber']}">
+							<h:outputText value="#{statisticResult.counter}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelDistinction']}">
+							<h:outputText value="#{statisticResult.distinction}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelFemale']}">
+							<h:outputText value="#{statisticResult.female}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelMale']}">
+							<h:outputText value="#{statisticResult.male}" />
+						</p:column>
+					</p:dataTable>
 				</p:tab>
 				<p:tab title="#{messages['linkDocuments']}">
 					<fieldset class="styledFieldset">

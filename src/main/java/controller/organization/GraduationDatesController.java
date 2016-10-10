@@ -21,11 +21,9 @@ import org.primefaces.event.TabChangeEvent;
 import data.Provider;
 import model.Assignment;
 import model.Enrollment;
-import model.Exam;
 import model.ExaminationDate;
 import model.GraduationDate;
 import model.ModelFactory;
-import model.ModuleAssignment;
 
 @ManagedBean(name = "graduationDates")
 @ViewScoped
@@ -42,11 +40,6 @@ public class GraduationDatesController implements Serializable {
 	private List<ExaminationDate> dates;
 	private Date newDate;
 	
-	private Integer masters;
-	private Integer mastersMale;
-	private Integer mastersFemale;
-	private Integer mastersDistinction;
-
 	@PostConstruct
 	public void init() {
 		tabIndex = 0;
@@ -69,37 +62,6 @@ public class GraduationDatesController implements Serializable {
 			}
 		}
 		dates = new ArrayList<ExaminationDate>(selectedGraduationDate.getDates());
-		
-		statistics();
-	}
-
-	public void statistics() {
-		masters = 0;
-		mastersMale = 0;
-		mastersFemale = 0;
-		mastersDistinction = 0;
-		
-		for(Enrollment enrollment : selectedGraduationDate.getEnrollments()) {
-				masters++;
-				if(enrollment.getStudent().getGender().equals("männlich")) {
-					mastersMale++;
-				} else {
-					mastersFemale++;
-				}
-				if(enrollment.getAssignments() != null && !enrollment.getAssignments().isEmpty()) {
-					Double counter = 0.0;
-					for(Assignment assignment : enrollment.getAssignments()) {
-						for(ModuleAssignment moduleAssignment : assignment.getModuleAssignments()) {
-							for(Exam exam : moduleAssignment.getExams()) {
-								counter += exam.getGrade() * exam.getCourse().getCourseOffer().getEcts();
-							}
-						}
-					}
-					if(counter / 120 < 1.5) {
-						mastersDistinction++;
-					}
-				}
-		}
 	}
 	
 	public String save() {
@@ -141,7 +103,6 @@ public class GraduationDatesController implements Serializable {
 		dates = new ArrayList<ExaminationDate>(selectedGraduationDate.getDates());
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate",
 				selectedGraduationDate);
-		statistics();
 	}
 
 	public String remove(Long id) {
@@ -276,21 +237,5 @@ public class GraduationDatesController implements Serializable {
 
 	public void setNewDate(Date newDate) {
 		this.newDate = newDate;
-	}
-	
-	public Integer getMasters() {
-		return masters;
-	}
-
-	public Integer getMastersMale() {
-		return mastersMale;
-	}
-
-	public Integer getMastersFemale() {
-		return mastersFemale;
-	}
-
-	public Integer getMastersDistinction() {
-		return mastersDistinction;
 	}
 }

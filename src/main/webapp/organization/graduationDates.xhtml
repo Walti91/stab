@@ -174,36 +174,28 @@
 					<fieldset class="nonStyledFieldset">
 						<legend>#{messages['labelNumberGraduationsForGraduationDate']}</legend>
 					</fieldset>
-					<div class="ui-datatable ui-widget">
-						<div class="ui-datatable-tablewrapper">
-							<table role="grid">
-								<thead>
-									<tr role="row">
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelNumber']}</span></th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelDistinction']}</span>
-										</th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelFemale']}</span></th>
-										<th class="ui-state-default" role="columnheader"><span
-											class="ui-column-title">#{messages['labelMale']}</span></th>
-									</tr>
-								</thead>
-								<tbody class="ui-datatable-data ui-widget-content">
-									<tr class="ui-widget-content ui-datatable-even">
-										<td><h:outputText
-												value="#{graduationDates.masters}" /></td>
-										<td><h:outputText
-												value="#{graduationDates.mastersDistinction}" /></td>
-										<td><h:outputText
-												value="#{graduationDates.mastersFemale}"></h:outputText></td>
-										<td><h:outputText value="#{graduationDates.mastersMale}" /></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+					<p:dataTable var="statisticResult"
+						value="#{statistic.handleGraduationDate()}">
+						<p:column headerText="">
+							<h:outputText value="#{statisticResult.description}" />
+						</p:column>
+						
+						<p:column headerText="#{messages['labelNumber']}">
+							<h:outputText value="#{statisticResult.counter}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelDistinction']}">
+							<h:outputText value="#{statisticResult.distinction}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelFemale']}">
+							<h:outputText value="#{statisticResult.female}" />
+						</p:column>
+
+						<p:column headerText="#{messages['labelMale']}">
+							<h:outputText value="#{statisticResult.male}" />
+						</p:column>
+					</p:dataTable>
 				</p:tab>
 				<p:tab title="#{messages['linkDocuments']}">
 					<fieldset class="styledFieldset">

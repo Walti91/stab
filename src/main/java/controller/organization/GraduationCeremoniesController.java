@@ -16,11 +16,8 @@ import javax.faces.context.FacesContext;
 import org.primefaces.event.TabChangeEvent;
 
 import data.Provider;
-import model.Assignment;
 import model.Enrollment;
-import model.Exam;
 import model.GraduationCeremony;
-import model.ModuleAssignment;
 import model.Room;
 
 @ManagedBean(name = "graduationCeremonies")
@@ -36,15 +33,6 @@ public class GraduationCeremoniesController implements Serializable {
 	private GraduationCeremony selectedGraduationCeremony;
 	private List<Room> rooms;
 	private Integer tabIndex;
-	
-	private Integer bachelors;
-	private Integer bachelorsMale;
-	private Integer bachelorsFemale;
-	private Integer bachelorsDistinction;
-	private Integer masters;
-	private Integer mastersMale;
-	private Integer mastersFemale;
-	private Integer mastersDistinction;
 
 	@PostConstruct
 	public void init() {
@@ -66,62 +54,6 @@ public class GraduationCeremoniesController implements Serializable {
 				selectedGraduationCeremony = graduationCeremonies.get(0);
 				FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony",
 						selectedGraduationCeremony);
-			}
-		}
-		statistics();
-	}
-	
-	public void statistics() {
-		bachelors = 0;
-		bachelorsMale = 0;
-		bachelorsFemale = 0;
-		bachelorsDistinction = 0;
-		masters = 0;
-		mastersMale = 0;
-		mastersFemale = 0;
-		mastersDistinction = 0;
-		
-		for(Enrollment enrollment : selectedGraduationCeremony.getEnrollments()) {
-			if(enrollment.getStudy().getType().equals("Masterstudium")) {
-				masters++;
-				if(enrollment.getStudent().getGender().equals("männlich")) {
-					mastersMale++;
-				} else {
-					mastersFemale++;
-				}
-				if(enrollment.getAssignments() != null && !enrollment.getAssignments().isEmpty()) {
-					Double counter = 0.0;
-					for(Assignment assignment : enrollment.getAssignments()) {
-						for(ModuleAssignment moduleAssignment : assignment.getModuleAssignments()) {
-							for(Exam exam : moduleAssignment.getExams()) {
-								counter += exam.getGrade() * exam.getCourse().getCourseOffer().getEcts();
-							}
-						}
-					}
-					if(counter / 120 < 1.5) {
-						mastersDistinction++;
-					}
-				}
-			} else {
-				bachelors++;
-				if(enrollment.getStudent().getGender().equals("männlich")) {
-					bachelorsMale++;
-				} else {
-					bachelorsFemale++;
-				}
-				if(enrollment.getAssignments() != null && !enrollment.getAssignments().isEmpty()) {
-					Double counter = 0.0;
-					for(Assignment assignment : enrollment.getAssignments()) {
-						for(ModuleAssignment moduleAssignment : assignment.getModuleAssignments()) {
-							for(Exam exam : moduleAssignment.getExams()) {
-								counter += exam.getGrade() * exam.getCourse().getCourseOffer().getEcts();
-							}
-						}
-					}
-					if(counter / 180 < 1.5) {
-						bachelorsDistinction++;
-					}
-				}
 			}
 		}
 	}
@@ -149,7 +81,6 @@ public class GraduationCeremoniesController implements Serializable {
 	
 	public void update() {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony", selectedGraduationCeremony);
-		statistics();
 	}
 	
 	public void previous() {
@@ -198,37 +129,5 @@ public class GraduationCeremoniesController implements Serializable {
 
 	public void setTabIndex(Integer tabIndex) {
 		this.tabIndex = tabIndex;
-	}
-
-	public Integer getBachelors() {
-		return bachelors;
-	}
-
-	public Integer getBachelorsMale() {
-		return bachelorsMale;
-	}
-
-	public Integer getBachelorsFemale() {
-		return bachelorsFemale;
-	}
-
-	public Integer getBachelorsDistinction() {
-		return bachelorsDistinction;
-	}
-
-	public Integer getMasters() {
-		return masters;
-	}
-
-	public Integer getMastersMale() {
-		return mastersMale;
-	}
-
-	public Integer getMastersFemale() {
-		return mastersFemale;
-	}
-
-	public Integer getMastersDistinction() {
-		return mastersDistinction;
 	}
 }
