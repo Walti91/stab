@@ -23,14 +23,18 @@ import model.GraduationDate;
 public class CommissionsController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManagedProperty(value = "#{provider}")
 	private Provider provider;
 
 	private List<GraduationDate> graduationDates;
 	private GraduationDate selectedGraduationDate;
-	private List<Enrollment> enrollments;
-	
+
+	/**
+	 * Loads and sorts all graduation dates. If there is already a date saved in
+	 * the session it will be selected. Otherwise the first entry of the list
+	 * will be selected.
+	 */
 	@PostConstruct
 	public void init() {
 		graduationDates = provider.loadAllGraduationDates();
@@ -41,8 +45,9 @@ public class CommissionsController implements Serializable {
 					return date2.getDates().get(0).getDate().compareTo(date1.getDates().get(0).getDate());
 				}
 			});
-			Object graduationDate = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("graduationDate");
-			if(graduationDate != null && graduationDates.contains(graduationDate)) {
+			Object graduationDate = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("graduationDate");
+			if (graduationDate != null && graduationDates.contains(graduationDate)) {
 				selectedGraduationDate = (GraduationDate) graduationDate;
 			} else {
 				selectedGraduationDate = graduationDates.get(0);
@@ -50,13 +55,18 @@ public class CommissionsController implements Serializable {
 						selectedGraduationDate);
 			}
 		}
-		
-		enrollments = selectedGraduationDate.getEnrollments();
 	}
-	
+
+	/**
+	 * Checks if the given enrollment is already assigned to a commission in
+	 * this case a note is added to the string.
+	 * 
+	 * @param enrollment
+	 * @return a string representing the validated enrollment
+	 */
 	public String validateEnrollment(Enrollment enrollment) {
 		StringBuffer sb = new StringBuffer(enrollment.getStudent().toString());
-		if(enrollment.getCommission() != null) {
+		if (enrollment.getCommission() != null) {
 			sb.append(" (");
 			sb.append(ResourceBundle.getBundle("messages").getString("labelAssignedEnrollments"));
 			sb.append(")");
@@ -64,38 +74,49 @@ public class CommissionsController implements Serializable {
 		return sb.toString();
 	}
 
+	/**
+	 * Deletes the commission of the given id and reloads the page to prevent inconsistencies.
+	 * @param id
+	 */
 	public String deleteCommission(Long id) {
 		Commission commission = provider.loadCommission(id);
 		Enrollment enrollment = commission.getEnrollment();
 		ExaminationDate examinationDate = commission.getExaminationDate();
-		if(enrollment != null) {
+		if (enrollment != null) {
 			enrollment.setCommission(null);
 		}
 		examinationDate.removeCommission(commission);
-		init();
-		return null;
+		return "/organization/commissions";
 	}
-	
-	public void change(Long id) {
+
+	/**
+	 * Every time a commission gets assigned a enrollment, the bidirectional relation has to be ensured and updated.
+	 * @param id
+	 */
+	public void changeEnrollment(Long id) {
 		Commission commission = provider.loadCommission(id);
 		Enrollment enrollment = commission.getEnrollment();
-		if(enrollment != null) {
-			if(enrollment.getCommission() != null && !enrollment.getCommission().equals(commission)) {
+		if (enrollment != null) {
+			if (enrollment.getCommission() != null && !enrollment.getCommission().equals(commission)) {
 				enrollment.getCommission().setEnrollment(null);
 			}
 			enrollment.setCommission(commission);
 		} else {
-			for(Enrollment e : enrollments) {
-				if(e.getCommission() != null && e.getCommission().getEnrollment() == null) {
+			for (Enrollment e : selectedGraduationDate.getEnrollments()) {
+				if (e.getCommission() != null && e.getCommission().getEnrollment() == null) {
 					e.setCommission(null);
 				}
 			}
 		}
 	}
 
-	public void update() {
-		enrollments = selectedGraduationDate.getEnrollments();
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate", selectedGraduationDate);
+	/**
+	 * Updates the graduation date of the session every time another element is
+	 * selected in the one menu.
+	 */
+	public void updateSession() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate",
+				selectedGraduationDate);
 	}
 
 	public GraduationDate getSelectedGraduationDate() {
@@ -112,9 +133,5 @@ public class CommissionsController implements Serializable {
 
 	public void setProvider(Provider provider) {
 		this.provider = provider;
-	}
-
-	public List<Enrollment> getEnrollments() {
-		return enrollments;
 	}
 }

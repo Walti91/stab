@@ -34,13 +34,19 @@ public class NewGraduationCeremonyController implements Serializable {
 		graduationCeremony = new ModelFactory().createGraduationCeremony();
 	}
 
+	/**
+	 * Saves the created graduation ceremony and stores it in the session.
+	 * 
+	 * @return
+	 */
 	public String save() {
 		provider.saveGraduationCeremony(graduationCeremony);
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
 						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyCreated"),
 						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyCreated")));
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony", graduationCeremony);
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony",
+				graduationCeremony);
 		return "/organization/graduationCeremonies";
 	}
 

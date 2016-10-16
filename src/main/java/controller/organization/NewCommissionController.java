@@ -31,7 +31,7 @@ public class NewCommissionController implements Serializable {
 	private Commission commission;
 	private List<Room> rooms;
 	private List<Professor> professors;
-	
+
 	private SimpleDateFormat dateFormat;
 
 	@PostConstruct
@@ -43,26 +43,26 @@ public class NewCommissionController implements Serializable {
 	}
 
 	public String save() {
-		if(commission.getFrom().getTime() < commission.getTo().getTime()) {
-		provider.saveCommission(commission);
-		commission.getExaminationDate().addCommission(commission);
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						ResourceBundle.getBundle("messages").getString("msgCommissionCreated"),
-						ResourceBundle.getBundle("messages").getString("msgCommissionCreated")));
-		return "/organization/commissions";
-		} 
+		if (commission.getFrom().getTime() < commission.getTo().getTime()) {
+			provider.saveCommission(commission);
+			commission.getExaminationDate().addCommission(commission);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							ResourceBundle.getBundle("messages").getString("msgCommissionCreated"),
+							ResourceBundle.getBundle("messages").getString("msgCommissionCreated")));
+			return "/organization/commissions";
+		}
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_WARN,
-				ResourceBundle.getBundle("messages").getString("msgCommissionInvalidTime"),
-				ResourceBundle.getBundle("messages").getString("msgCommissionInvalidTime")));
+						ResourceBundle.getBundle("messages").getString("msgCommissionInvalidTime"),
+						ResourceBundle.getBundle("messages").getString("msgCommissionInvalidTime")));
 		return null;
 	}
 
 	public void setProvider(Provider provider) {
 		this.provider = provider;
 	}
-	
+
 	public String format(Date date) {
 		return dateFormat.format(date);
 	}

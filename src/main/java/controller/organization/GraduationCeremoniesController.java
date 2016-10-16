@@ -34,6 +34,11 @@ public class GraduationCeremoniesController implements Serializable {
 	private List<Room> rooms;
 	private Integer tabIndex;
 
+	/**
+	 * Loads and sorts all graduation ceremonies. If there is already a ceremony
+	 * saved in the session it will be selected. Otherwise the first entry of
+	 * the list will be selected.
+	 */
 	@PostConstruct
 	public void init() {
 		tabIndex = 0;
@@ -47,8 +52,9 @@ public class GraduationCeremoniesController implements Serializable {
 					return ceremony2.getDate().compareTo(ceremony1.getDate());
 				}
 			});
-			Object graduationCeremony = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("graduationCeremony");
-			if(graduationCeremony != null && graduationCeremonies.contains(graduationCeremony)) {
+			Object graduationCeremony = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+					.get("graduationCeremony");
+			if (graduationCeremony != null && graduationCeremonies.contains(graduationCeremony)) {
 				selectedGraduationCeremony = (GraduationCeremony) graduationCeremony;
 			} else {
 				selectedGraduationCeremony = graduationCeremonies.get(0);
@@ -58,6 +64,11 @@ public class GraduationCeremoniesController implements Serializable {
 		}
 	}
 
+	/**
+	 * Saved the graduation ceremony and displays a message to the user.
+	 * 
+	 * @return
+	 */
 	public String save() {
 		provider.saveGraduationCeremony(selectedGraduationCeremony);
 		FacesContext.getCurrentInstance().addMessage(null,
@@ -66,9 +77,14 @@ public class GraduationCeremoniesController implements Serializable {
 						ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
 		return null;
 	}
-	
-	public void delete() {
-		for(Enrollment enrollment : selectedGraduationCeremony.getEnrollments()) {
+
+	/**
+	 * Deletes the selected graduation ceremony and reloads the page.
+	 * 
+	 * @return
+	 */
+	public String delete() {
+		for (Enrollment enrollment : selectedGraduationCeremony.getEnrollments()) {
 			enrollment.setGraduationDate(null);
 		}
 		provider.deleteGraduationCeremony(selectedGraduationCeremony);
@@ -76,32 +92,25 @@ public class GraduationCeremoniesController implements Serializable {
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
 						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyDeleted"),
 						ResourceBundle.getBundle("messages").getString("msgGraduationCeremonyDeleted")));
-		init();
+		return "/organization/graduationCeremonies";
 	}
-	
-	public void update() {
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony", selectedGraduationCeremony);
+
+	/**
+	 * Keeps the session in sync with the selected graduation ceremony.
+	 */
+	public void updateSession() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationCeremony",
+				selectedGraduationCeremony);
 	}
-	
-	public void previous() {
-		int index = graduationCeremonies.indexOf(selectedGraduationCeremony);
-		if(index > 0) {
-			selectedGraduationCeremony = graduationCeremonies.get(index - 1);
-			update();
-		}
-	}
-	
-	public void next() {
-		int index = graduationCeremonies.indexOf(selectedGraduationCeremony);
-		if(index < graduationCeremonies.size() - 1) {
-			selectedGraduationCeremony = graduationCeremonies.get(index + 1);
-			update();
-		}
-	}
-	
+
+	/**
+	 * Saves the selected tab while switching graduation ceremonies.
+	 * 
+	 * @param event
+	 */
 	public void updateTabIndex(TabChangeEvent event) {
-        tabIndex = event.getComponent().getChildren().indexOf(event.getTab());
-    }
+		tabIndex = event.getComponent().getChildren().indexOf(event.getTab());
+	}
 
 	public void setProvider(Provider provider) {
 		this.provider = provider;

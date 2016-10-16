@@ -23,27 +23,28 @@ import model.ModelFactory;
 public class NewGraduationDateController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManagedProperty(value = "#{provider}")
 	private Provider provider;
-	
+
 	private GraduationDate graduationDate;
 	private Date newDate;
-	
+
 	@PostConstruct
 	public void init() {
 		graduationDate = new ModelFactory().createGraduationDate();
 	}
-	
+
 	public String save() {
-		if(!graduationDate.getDates().isEmpty()) {
-		provider.saveGraduationDate(graduationDate);
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated"),
-						ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated")));
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate", graduationDate);
-		return "/organization/graduationDates";
+		if (!graduationDate.getDates().isEmpty()) {
+			provider.saveGraduationDate(graduationDate);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated"),
+							ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated")));
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate",
+					graduationDate);
+			return "/organization/graduationDates";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -52,15 +53,15 @@ public class NewGraduationDateController implements Serializable {
 			return null;
 		}
 	}
-	
-	public String remove(Long id) {
+
+	public String removeDate(Long id) {
 		ExaminationDate date = provider.loadExaminationDate(id);
 		graduationDate.getDates().remove(date);
 		return null;
 	}
-	
-	public String add() {
-		if(newDate != null) {
+
+	public String addDate() {
+		if (newDate != null) {
 			ExaminationDate date = new ModelFactory().createExaminationDate();
 			date.setDate(newDate);
 			provider.saveExaminationDate(date);
@@ -73,8 +74,10 @@ public class NewGraduationDateController implements Serializable {
 				}
 			});
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-					ResourceBundle.getBundle("messages").getString("msgInvalidExaminationDate"), ResourceBundle.getBundle("messages").getString("msgInvalidExaminationDate")));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN,
+							ResourceBundle.getBundle("messages").getString("msgInvalidExaminationDate"),
+							ResourceBundle.getBundle("messages").getString("msgInvalidExaminationDate")));
 		}
 		return null;
 	}

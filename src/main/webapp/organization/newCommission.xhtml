@@ -23,9 +23,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  	 -->
- 	<ui:define name="head">
- 		<script type="text/javascript" src="de.js" />
- 	</ui:define>
+	<ui:define name="head">
+		<script type="text/javascript" src="germanCalendar.js" />
+	</ui:define>
 	<ui:define name="header">
 		<h1>#{messages['headerTitle']}</h1>
 		<div class="subHeader">#{messages['headerCommissions']}</div>
@@ -35,38 +35,41 @@
 			<fieldset class="styledFieldset">
 				<legend>#{messages['labelNewCommission']}</legend>
 				<ol>
-					<li>
-						<h:outputLabel for="date" class="required">#{messages['labelDate']}</h:outputLabel>
-						<h:selectOneMenu id="date" value="#{newCommission.commission.examinationDate}" converter="examinationDateConverter" class="largeInput">
-							<f:selectItems value="#{graduationDate.dates}" var="examinationDate" itemLabel="#{newCommission.format(examinationDate.date)}" itemValue="#{examinationDate}" />
-						</h:selectOneMenu>
-					</li>
-					<li>
-						<h:outputLabel for="from" class="required">#{messages['labelFrom']}</h:outputLabel>
-						<p:calendar id="from" value="#{newCommission.commission.from}" showOn="button" pattern="#{messages['timeFormat']}" timeOnly="true" required="true" label="#{messages['labelFrom']}" />
-						<h:message for="from" errorClass="errorMessage" />
-					</li>
-					<li>
-						<h:outputLabel for="to" class="required">#{messages['labelTo']}</h:outputLabel>
-						<p:calendar id="to" value="#{newCommission.commission.to}" showOn="button" pattern="#{messages['timeFormat']}" timeOnly="true" required="true" label="#{messages['labelTo']}" />
-						<h:message for="to" errorClass="errorMessage" />
-					</li>
-					<li>
-						<h:outputLabel for="room" class="required">#{messages['labelRoom']}</h:outputLabel>
-						<h:selectOneMenu id="room" value="#{newCommission.commission.room}" converter="roomConverter" class="largeInput">
+					<li><h:outputLabel for="date" class="required">#{messages['labelDate']}</h:outputLabel>
+						<h:selectOneMenu id="date"
+							value="#{newCommission.commission.examinationDate}"
+							converter="examinationDateConverter" class="largeInput">
+							<f:selectItems value="#{graduationDate.dates}"
+								var="examinationDate"
+								itemLabel="#{newCommission.format(examinationDate.date)}"
+								itemValue="#{examinationDate}" />
+						</h:selectOneMenu></li>
+					<li><h:outputLabel for="from" class="required">#{messages['labelFrom']}</h:outputLabel>
+						<p:calendar id="from" value="#{newCommission.commission.from}"
+							showOn="button" pattern="#{messages['timeFormat']}"
+							timeOnly="true" required="true" label="#{messages['labelFrom']}" />
+						<h:message for="from" errorClass="errorMessage" /></li>
+					<li><h:outputLabel for="to" class="required">#{messages['labelTo']}</h:outputLabel>
+						<p:calendar id="to" value="#{newCommission.commission.to}"
+							showOn="button" pattern="#{messages['timeFormat']}"
+							timeOnly="true" required="true" label="#{messages['labelTo']}" />
+						<h:message for="to" errorClass="errorMessage" /></li>
+					<li><h:outputLabel for="room" class="required">#{messages['labelRoom']}</h:outputLabel>
+						<h:selectOneMenu id="room"
+							value="#{newCommission.commission.room}"
+							converter="roomConverter" class="largeInput">
 							<f:selectItems value="#{newCommission.rooms}" />
-						</h:selectOneMenu>
-					</li>
-					<li>
-						<h:outputLabel for="chairman" class="required">#{messages['labelChairman']}</h:outputLabel>
-						<h:selectOneMenu id="chairman" value="#{newCommission.commission.chairman}" converter="professorConverter" class="largeInput">
+						</h:selectOneMenu></li>
+					<li><h:outputLabel for="chairman" class="required">#{messages['labelChairman']}</h:outputLabel>
+						<h:selectOneMenu id="chairman"
+							value="#{newCommission.commission.chairman}"
+							converter="professorConverter" class="largeInput">
 							<f:selectItems value="#{newCommission.professors}" />
-						</h:selectOneMenu>
-					</li>
-					<li>
-						<h:commandButton id="save" value="#{messages['labelSave']}" action="#{newCommission.save}" />
-						<h:button id="cancel" value="#{messages['labelCancel']}" outcome="/organization/commissions" />
-					</li>
+						</h:selectOneMenu></li>
+					<li><h:commandButton id="save"
+							value="#{messages['labelSave']}" action="#{newCommission.save}" />
+						<h:button id="cancel" value="#{messages['labelCancel']}"
+							outcome="/organization/commissions" /></li>
 				</ol>
 			</fieldset>
 		</h:form>
