@@ -49,14 +49,17 @@
 								</h:commandButton></li>
 						</c:forEach>
 						<li><h:outputLabel for="newExaminationDate">#{messages['labelNewExaminationDate']}</h:outputLabel>
-							<p:calendar id="newExaminationDate" value="#{newGraduationDate.newDate}"
-								showOn="button" pattern="#{messages['dateFormat']}"
-								navigator="true" /> <h:commandButton id="add"
-								value="#{messages['labelAdd']}"
+							<p:calendar id="newExaminationDate"
+								value="#{newGraduationDate.newDate}" showOn="button"
+								pattern="#{messages['dateFormat']}" navigator="true" /> <h:commandButton
+								id="add" value="#{messages['labelAdd']}"
 								action="#{newGraduationDate.addDate()}">
-								<f:ajax execute="newExaminationDate" render="dates :globalMessagesPanel" />
+								<f:ajax execute="newExaminationDate"
+									render="dates :globalMessagesPanel" />
 							</h:commandButton></li>
 					</h:panelGroup>
+				</ol>
+				<ol>
 					<li><h:outputLabel for="registrationFrom" class="required">#{messages['labelRegistrationFrom']}</h:outputLabel>
 						<p:calendar id="registrationFrom"
 							value="#{newGraduationDate.graduationDate.registrationFrom}"
@@ -109,6 +112,7 @@
 							outcome="/organization/graduationDates" /></li>
 				</ol>
 			</fieldset>
+			<p:defaultCommand target="save" />
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -187,11 +187,9 @@
 					</fieldset>
 				</p:tab>
 			</p:tabView>
-		</h:form>
-		<!-- Dialog to confirm the delete of a ceremony. -->
-		<h:form id="graduationCeremoniesConfirmForm">
+			<!-- Dialog to confirm the delete of a ceremony. -->
 			<p:dialog header="#{messages['labelConfirmation']}"
-				widgetVar="confirmDelete" modal="true">
+				widgetVar="confirmDelete" modal="true" draggable="false" resizable="false">
 				<p>
 					<h:outputText
 						value="#{messages['msgConfirmGraduationCeremonyDelete']}" />
@@ -201,6 +199,7 @@
 				<p:commandButton id="cancel" value="#{messages['labelCancel']}"
 					type="button" onclick="PF('confirmDelete').hide();" />
 			</p:dialog>
+			<p:hotkey bind="esc" handler="PF('confirmDelete').hide();" />
 		</h:form>
 	</ui:define>
 </ui:composition>
