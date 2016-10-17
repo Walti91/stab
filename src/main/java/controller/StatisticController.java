@@ -1,3 +1,20 @@
+/**
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package controller;
 
 import java.io.Serializable;
@@ -22,6 +39,15 @@ public class StatisticController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Calculates the number of bachelors and masters for the given enrollments.
+	 * Also counts how many are male or female and finished with "Auszeichnung".
+	 * 
+	 * @param enrollments
+	 * @return A list containing three objects of type StatisticResult. One for
+	 *         the bachelors, one for the masters and a sum.
+	 * @see StatisticResult
+	 */
 	public List<StatisticResult> createStatistic(List<Enrollment> enrollments) {
 		StatisticResult bachelors = new StatisticResult(
 				ResourceBundle.getBundle("messages").getString("labelBachelors"));
@@ -84,12 +110,24 @@ public class StatisticController implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Reads the graduation date from the session and calls the createStatistic
+	 * method with the enrollments of the date.
+	 * 
+	 * @return
+	 */
 	public List<StatisticResult> handleGraduationDate() {
 		GraduationDate graduationDate = (GraduationDate) FacesContext.getCurrentInstance().getExternalContext()
 				.getSessionMap().get("graduationDate");
 		return createStatistic(graduationDate.getEnrollments());
 	}
 
+	/**
+	 * Reads the graduation ceremony from the session and calls the
+	 * createStatistic method with the enrollments of the ceremony.
+	 * 
+	 * @return
+	 */
 	public List<StatisticResult> handleGraduationCeremony() {
 		GraduationCeremony graduationCeremony = (GraduationCeremony) FacesContext.getCurrentInstance()
 				.getExternalContext().getSessionMap().get("graduationCeremony");

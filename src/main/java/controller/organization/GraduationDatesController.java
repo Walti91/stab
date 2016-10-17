@@ -1,3 +1,20 @@
+/**
+	Copyright (C) 2016  Florian Waltenberger
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package controller.organization;
 
 import java.io.Serializable;
@@ -79,20 +96,37 @@ public class GraduationDatesController implements Serializable {
 	 */
 	public String save() {
 		if (!dates.isEmpty()) {
-			selectedGraduationDate.setDates(dates);
-			provider.saveGraduationDate(selectedGraduationDate);
-			for (Enrollment enrollment : selectedGraduationDate.getEnrollments()) {
-				if (!selectedGraduationDate.getDates().contains(enrollment.getCommission().getExaminationDate())) {
-					enrollment.setCommission(null);
+			if (selectedGraduationDate.getRegistrationFrom().getTime() < selectedGraduationDate.getRegistrationTo()
+					.getTime()) {
+				if (selectedGraduationDate.getRegistrationTo().getTime() < selectedGraduationDate.getDates().get(0)
+						.getDate().getTime()) {
+					selectedGraduationDate.setDates(dates);
+					provider.saveGraduationDate(selectedGraduationDate);
+					for (Enrollment enrollment : selectedGraduationDate.getEnrollments()) {
+						if (!selectedGraduationDate.getDates()
+								.contains(enrollment.getCommission().getExaminationDate())) {
+							enrollment.setCommission(null);
+						}
+					}
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
+									ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
+									ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd"),
+									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd")));
 				}
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime"),
+								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime")));
 			}
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
-							ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
 		}
@@ -100,7 +134,7 @@ public class GraduationDatesController implements Serializable {
 	}
 
 	/**
-	 * Deltes the selected graduation date and updates the registered
+	 * Deletes the selected graduation date and updates the registered
 	 * enrollments.
 	 * 
 	 * @return
