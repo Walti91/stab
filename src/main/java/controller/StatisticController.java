@@ -26,6 +26,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+
 import model.Assignment;
 import model.Enrollment;
 import model.Exam;
@@ -38,6 +43,7 @@ import model.ModuleAssignment;
 public class StatisticController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private List<StatisticResult> statistic;
 
 	/**
 	 * Calculates the number of bachelors and masters for the given enrollments.
@@ -102,12 +108,12 @@ public class StatisticController implements Serializable {
 		sum.setFemale(bachelors.getFemale() + masters.getFemale());
 		sum.setDistinction(bachelors.getDistinction() + masters.getDistinction());
 
-		List<StatisticResult> result = new ArrayList<StatisticResult>();
-		result.add(bachelors);
-		result.add(masters);
-		result.add(sum);
+		statistic = new ArrayList<StatisticResult>();
+		statistic.add(bachelors);
+		statistic.add(masters);
+		statistic.add(sum);
 
-		return result;
+		return statistic;
 	}
 
 	/**
@@ -132,5 +138,30 @@ public class StatisticController implements Serializable {
 		GraduationCeremony graduationCeremony = (GraduationCeremony) FacesContext.getCurrentInstance()
 				.getExternalContext().getSessionMap().get("graduationCeremony");
 		return createStatistic(graduationCeremony.getEnrollments());
+	}
+
+	public BarChartModel createBarModel() {
+		BarChartModel barModel = new BarChartModel();
+
+		ChartSeries male = new ChartSeries();
+		male.setLabel(ResourceBundle.getBundle("messages").getString("labelMale"));
+		ChartSeries female = new ChartSeries();
+		female.setLabel(ResourceBundle.getBundle("messages").getString("labelFemale"));
+
+		for (StatisticResult entry : statistic) {
+			male.set(entry.getDescription(), entry.getMale());
+			female.set(entry.getDescription(), entry.getFemale());
+		}
+
+		barModel.addSeries(male);
+		barModel.addSeries(female);
+
+		barModel.setLegendPosition("nw");
+		barModel.setStacked(true);
+
+		Axis xAxis = barModel.getAxis(AxisType.X);
+		xAxis.setLabel(ResourceBundle.getBundle("messages").getString("labelParticipants"));
+
+		return barModel;
 	}
 }

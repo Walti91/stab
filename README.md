@@ -1,8 +1,8 @@
-# StudyGraduationAdministration
+# STAB
 
 ## Synopsis
 
-This project is a remake of the old system for completing studies at the TU Vienna, done by the deanery. The primary focus was to reproduce the website with newer techologies, the database access is not yet implemented and has been replaced by dummy data for testing purposes.
+This project is a remake of the old system for completing studies at the TU Vienna, done by the deanery. The primary focus was to reproduce the website with newer technologies, the database access is not yet implemented and has been replaced by dummy data for testing purposes.
 
 ## Technologies
 
