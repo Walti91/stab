@@ -140,6 +140,12 @@ public class StatisticController implements Serializable {
 		return createStatistic(graduationCeremony.getEnrollments());
 	}
 
+	/**
+	 * Creates a bar chart using the created statistic. Shows the male and
+	 * female participants.
+	 * 
+	 * @return
+	 */
 	public BarChartModel createBarModel() {
 		BarChartModel barModel = new BarChartModel();
 

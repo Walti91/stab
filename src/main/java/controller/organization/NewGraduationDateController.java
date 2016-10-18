@@ -52,41 +52,6 @@ public class NewGraduationDateController implements Serializable {
 		graduationDate = new ModelFactory().createGraduationDate();
 	}
 
-	/*
-	 * if (!dates.isEmpty()) { if
-	 * (selectedGraduationDate.getRegistrationFrom().getTime() <
-	 * selectedGraduationDate.getRegistrationTo() .getTime()) { if
-	 * (selectedGraduationDate.getRegistrationTo().getTime() <
-	 * selectedGraduationDate.getDates().get(0) .getDate().getTime()) {
-	 * selectedGraduationDate.setDates(dates);
-	 * provider.saveGraduationDate(selectedGraduationDate); for (Enrollment
-	 * enrollment : selectedGraduationDate.getEnrollments()) { if
-	 * (!selectedGraduationDate.getDates()
-	 * .contains(enrollment.getCommission().getExaminationDate())) {
-	 * enrollment.setCommission(null); } }
-	 * FacesContext.getCurrentInstance().addMessage(null, new
-	 * FacesMessage(FacesMessage.SEVERITY_INFO,
-	 * ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
-	 * ResourceBundle.getBundle("messages").getString("msgSavedChanges"))); }
-	 * else { FacesContext.getCurrentInstance().addMessage(null, new
-	 * FacesMessage(FacesMessage.SEVERITY_ERROR,
-	 * ResourceBundle.getBundle("messages").getString(
-	 * "msgInvalidRegistrationEnd"),
-	 * ResourceBundle.getBundle("messages").getString(
-	 * "msgInvalidRegistrationEnd"))); } } else {
-	 * FacesContext.getCurrentInstance().addMessage(null, new
-	 * FacesMessage(FacesMessage.SEVERITY_ERROR,
-	 * ResourceBundle.getBundle("messages").getString(
-	 * "msgInvalidRegistrationTime"),
-	 * ResourceBundle.getBundle("messages").getString(
-	 * "msgInvalidRegistrationTime"))); } } else {
-	 * FacesContext.getCurrentInstance().addMessage(null, new
-	 * FacesMessage(FacesMessage.SEVERITY_ERROR,
-	 * ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
-	 * ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
-	 * } return null;
-	 */
-
 	public String save() {
 		if (!graduationDate.getDates().isEmpty()) {
 			if (graduationDate.getRegistrationFrom().getTime() < graduationDate.getRegistrationTo().getTime()) {
@@ -112,11 +77,12 @@ public class NewGraduationDateController implements Serializable {
 								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime"),
 								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime")));
 			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
+							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
 		}
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
-						ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
 		return null;
 	}
 
