@@ -95,40 +95,23 @@ public class GraduationDatesController implements Serializable {
 	 * @return
 	 */
 	public String save() {
-		if (!dates.isEmpty()) {
-			if (selectedGraduationDate.getRegistrationFrom().getTime() < selectedGraduationDate.getRegistrationTo()
-					.getTime()) {
-				if (selectedGraduationDate.getRegistrationTo().getTime() < selectedGraduationDate.getDates().get(0)
-						.getDate().getTime()) {
-					selectedGraduationDate.setDates(dates);
-					provider.saveGraduationDate(selectedGraduationDate);
-					for (Enrollment enrollment : selectedGraduationDate.getEnrollments()) {
-						if (!selectedGraduationDate.getDates()
-								.contains(enrollment.getCommission().getExaminationDate())) {
-							enrollment.setCommission(null);
-						}
-					}
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
-									ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
-				} else {
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd"),
-									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd")));
-				}
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime"),
-								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime")));
-			}
-		} else {
+		if (dates.isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
+		} else {
+			selectedGraduationDate.setDates(dates);
+			provider.saveGraduationDate(selectedGraduationDate);
+			for (Enrollment enrollment : selectedGraduationDate.getEnrollments()) {
+				if (!selectedGraduationDate.getDates().contains(enrollment.getCommission().getExaminationDate())) {
+					enrollment.setCommission(null);
+				}
+			}
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							ResourceBundle.getBundle("messages").getString("msgSavedChanges"),
+							ResourceBundle.getBundle("messages").getString("msgSavedChanges")));
 		}
 		return null;
 	}

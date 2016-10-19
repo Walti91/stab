@@ -52,46 +52,78 @@ public class NewGraduationDateController implements Serializable {
 		graduationDate = new ModelFactory().createGraduationDate();
 	}
 
+	/**
+	 * Validates the entered dates to be useful.
+	 * 
+	 * @return
+	 */
 	public String save() {
-		if (!graduationDate.getDates().isEmpty()) {
-			if (graduationDate.getRegistrationFrom().getTime() < graduationDate.getRegistrationTo().getTime()) {
-				if (graduationDate.getRegistrationTo().getTime() < graduationDate.getDates().get(0).getDate()
-						.getTime()) {
-					provider.saveGraduationDate(graduationDate);
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated"),
-									ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated")));
-					FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate",
-							graduationDate);
-					return "/organization/graduationDates";
-				} else {
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd"),
-									ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd")));
-				}
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime"),
-								ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime")));
-			}
-		} else {
+		Boolean invalid = false;
+		if (graduationDate.getDates().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate"),
 							ResourceBundle.getBundle("messages").getString("msgNoExaminationDate")));
+			invalid = true;
 		}
-		return null;
+		if (graduationDate.getRegistrationFrom().getTime() >= graduationDate.getRegistrationTo().getTime()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime"),
+							ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationTime")));
+			invalid = true;
+		}
+		if (!graduationDate.getDates().isEmpty() && graduationDate.getRegistrationTo().getTime() >= graduationDate.getDates().get(0).getDate().getTime()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd"),
+							ResourceBundle.getBundle("messages").getString("msgInvalidRegistrationEnd")));
+			invalid = true;
+		}
+		if (graduationDate.getSubmissionFrom() != null && graduationDate.getSubmissionTo() != null && graduationDate.getSubmissionFrom().getTime() >= graduationDate.getSubmissionTo().getTime()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ResourceBundle.getBundle("messages").getString("msgInvalidSubmissionTime"),
+							ResourceBundle.getBundle("messages").getString("msgInvalidSubmissionTime")));
+			invalid = true;
+		}
+		if (graduationDate.getPickupFrom() != null && graduationDate.getPickupTo() != null && graduationDate.getPickupFrom().getTime() >= graduationDate.getPickupTo().getTime()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ResourceBundle.getBundle("messages").getString("msgInvalidPickupTime"),
+							ResourceBundle.getBundle("messages").getString("msgInvalidPickupTime")));
+			invalid = true;
+		}
+		if (invalid) {
+			return null;
+		}
+
+		provider.saveGraduationDate(graduationDate);
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated"),
+						ResourceBundle.getBundle("messages").getString("msgGraduationDateCreated")));
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("graduationDate", graduationDate);
+		return "/organization/graduationDates";
 	}
 
+	/**
+	 * Deletes the examination date with the given id.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public String removeDate(Long id) {
 		ExaminationDate date = provider.loadExaminationDate(id);
 		graduationDate.getDates().remove(date);
 		return null;
 	}
 
+	/**
+	 * Creates a new examination date with the define date.
+	 * 
+	 * @return
+	 */
 	public String addDate() {
 		if (newDate != null) {
 			ExaminationDate date = new ModelFactory().createExaminationDate();
